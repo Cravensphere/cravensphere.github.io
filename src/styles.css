@@ -6,7 +6,7 @@ html, body {
   margin: 0;
   border: 0;
   padding: 0;
-  background-color: #fff;
+  background-color: #306beb;
 }
 
 main {
@@ -20,7 +20,7 @@ main > h1 {
   font-size: 3.5em;
 }
 
-@import "{{ site.theme }}";
+
 
 header {
   display: none;
