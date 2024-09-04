@@ -25,13 +25,13 @@
                     
     
                         // Extract and format the desired information
-                        var title = volumeInfo.title;
-                        var authors = volumeInfo.authors ? volumeInfo.authors.join(", ") : "N/A"; // Join authors array into a comma-separated string
-                        var publisher = volumeInfo.publisher;
-                        var publishedDate = volumeInfo.publishedDate;
-                        var description = volumeInfo.description;
-                        var pageCount = volumeInfo.pageCount;
-                        var thumbnail = volumeInfo.imageLinks ? volumeInfo.imageLinks.thumbnail : "";
+                        var title = books.title;
+                        var authors = books.authors ? volumeInfo.authors.join(", ") : "N/A"; // Join authors array into a comma-separated string
+                        var publisher = books.publisher;
+                        var publishedDate = books.publishedDate;
+                        var description = books.description;
+                        var pageCount = books.pageCount;
+                        var thumbnail = books.imageLinks ? volumeInfo.imageLinks.thumbnail : "";
     
                         // Append the data to the list
                         $('#data-list').append(
@@ -49,7 +49,7 @@
                     // Handle error
                     $('#data-list').append('<li>Error loading data.</li>');
                 });
-        });
+        
     </script>
 </head>
 
