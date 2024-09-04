@@ -18,27 +18,30 @@
                 .then(data => {
                     // Clear the list before appending new data
                     $('#data-list').empty();
-
-                    // Access the nested `ISBN:1593274874` object
-                    var book = data[docs];
-
-                    // Extract and format the desired information
-                    var title = book.title_suggest || 'N/A';
-                    var authors = book.authorname || 'N/A';
-                    var publisher = book.publisher|| 'N/A';
-                    var publishPlace = book.publish_place || 'N/A';
-                    var isbn = book.isbn || 'N/A';
-                    var publishedDate = book.publish_year || 'N/A';
-                    // Append the data to the list
-                    $('#data-list').append(
-                        `<li>Title: ${title}</li>
-                        <li>ISBN: ${isbn}</li>
-                         <li>Author(s): ${authors}</li>
-                         <li>Publisher: ${publisher}</li>
-                         <li>Publish Place: ${publishPlace}</li>
-                         <li>Published Date: ${publishedDate}</li>
-                         `
-                    );
+    
+                    // Access the `docs` array
+                    var books = data.docs;
+    
+                    // Iterate over each book in the array
+                    books.forEach(book => {
+                        // Extract and format the desired information
+                        var title = book.title_suggest || 'N/A';
+                        var authors = book.author_name ? book.author_name.join(', ') : 'N/A';
+                        var publisher = book.publisher ? book.publisher.join(', ') : 'N/A';
+                        var publishPlace = book.publish_place ? book.publish_place.join(', ') : 'N/A';
+                        var isbn = book.isbn ? book.isbn.join(', ') : 'N/A';
+                        var publishedDate = book.publish_year ? book.publish_year.join(', ') : 'N/A';
+    
+                        // Append the data to the list
+                        $('#data-list').append(
+                            `<li>Title: ${title}</li>
+                            <li>ISBN: ${isbn}</li>
+                            <li>Author(s): ${authors}</li>
+                            <li>Publisher: ${publisher}</li>
+                            <li>Publish Place: ${publishPlace}</li>
+                            <li>Published Date: ${publishedDate}</li>`
+                        );
+                    });
                 })
                 .catch(error => {
                     // Handle error
