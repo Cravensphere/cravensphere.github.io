@@ -13,37 +13,39 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-                fetch('src/json-files/openlibrary-book.json')
-                    
-                    .then(data => {
-                        // Clear the list before appending new data
-                        $('#data-list').empty();
-                        
-                        // Access the nested `volumeInfo` object
-                        var volumeInfo = data.volumeInfo;
+            fetch('src/json-files/openlibrary-book.json')
+                .then(response => response.json()) // Ensure the response is parsed as JSON
+                .then(data => {
+                    // Clear the list before appending new data
+                    $('#data-list').empty();
 
-                        // Extract and format the desired information
-                        var title = volumeInfo.title;
-                        var authors = volumeInfo.authors.join(", "); // Join authors array into a comma-separated string
-                        var publisher = volumeInfo.publisher;
+                    // Access the nested `ISBN:1593274874` object
+                    var book = data["ISBN:1593274874"];
 
-                        // Append the data to the list
-                        $('#data-list').append(
-                            `<li><img src="${volumeInfo.imageLinks.thumbnail}" alt="Book Cover"></li>
-                             <li>Title: ${title}</li>
-                             <li>Author(s): ${authors}</li>
-                             <li>Publisher: ${publisher}</li>
-                             <li>Published Date: ${volumeInfo.publishedDate}</li>
-                             <li>${volumeInfo.description}</li>
-                             <li>Page Count: ${volumeInfo.pageCount}</li>
-                             `
-                        );
-                    })
-                    .catch(error => {
-                        // Handle error
-                        $('#data-list').append('<li>Error loading data.</li>');
-                    });
-            
+                    // Extract and format the desired information
+                    var title = book.title || 'N/A';
+                    var authors = book.authors.map(author => author.name).join(', ') || 'N/A';
+                    var publisher = book.publishers.map(publisher => publisher.name).join(', ') || 'N/A';
+                    var publishedDate = book.publish_date || 'N/A';
+                    var description = book.description || 'N/A';
+                    var pageCount = book.number_of_pages || 'N/A';
+                    var image = book.cover ? book.cover.medium : 'default-image-url.jpg'; // Provide a default image URL
+
+                    // Append the data to the list
+                    $('#data-list').append(
+                        `<li><img src="${image}" alt="Book Cover"></li>
+                         <li>Title: ${title}</li>
+                         <li>Author(s): ${authors}</li>
+                         <li>Publisher: ${publisher}</li>
+                         <li>Published Date: ${publishedDate}</li>
+                         <li>${description}</li>
+                         <li>Page Count: ${pageCount}</li>`
+                    );
+                })
+                .catch(error => {
+                    // Handle error
+                    $('#data-list').append('<li>Error loading data.</li>');
+                });
         });
     </script>
 </head>
