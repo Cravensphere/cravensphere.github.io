@@ -29,7 +29,8 @@
                         var title = book.title || 'N/A';
                         var subtitle = book.subtitle || 'N/A';
                         var description = book.description || 'N/A';
-                        var image = book.image;
+                        // get the image
+                        var image = book.image || 'N/A';
     
                         // Append the data to the list
                         $('#data-list').append(
