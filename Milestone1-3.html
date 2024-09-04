@@ -29,23 +29,20 @@
                         // Iterate over each book in the array
                         books.forEach(book => {
                             // Extract and format the desired information
+                            var isbn = book.isbn || 'N/A';
                             var title = book.title || 'N/A';
-                            var authors = book.authors ? book.authors.join(", ") : "N/A"; // Join authors array into a comma-separated string
-                            var publisher = book.publisher || 'N/A';
-                            var publishedDate = book.publishedDate || 'N/A';
+                            var subtitle = book.subtitle || 'N/A';
                             var description = book.description || 'N/A';
-                            var pageCount = book.pageCount || 'N/A';
-                            var thumbnail = book.imageLinks ? book.imageLinks.thumbnail : "";
+                            var thumbnail = book.image;
     
                             // Append the data to the list
                             $('#data-list').append(
                                 `<li><img src="${thumbnail}" alt="Book Cover"></li>
-                                 <li>Title: ${title}</li>
-                                 <li>Author(s): ${authors}</li>
-                                 <li>Publisher: ${publisher}</li>
-                                 <li>Published Date: ${publishedDate}</li>
+                                <li>ISBN: ${isbn}</li> 
+                                <li>Title: ${title}</li>
+                                <li>Subtitle: ${subtitle}</li>
                                  <li>Description: ${description}</li>
-                                 <li>Page Count: ${pageCount}</li>`
+                                 
                             );
                         });
                     });
