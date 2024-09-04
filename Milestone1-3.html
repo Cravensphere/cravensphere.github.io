@@ -20,11 +20,9 @@
                     $('#data-list').empty();
                     
                     // Access the items array
-                    var items = data.items;
+                    var books = data.Books;
     
-                    // Iterate over each item in the array
-                    items.forEach(item => {
-                        var volumeInfo = item.volumeInfo;
+                    
     
                         // Extract and format the desired information
                         var title = volumeInfo.title;
