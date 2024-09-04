@@ -25,7 +25,7 @@
                         $('#data-list').empty();
                         
                         // Access the nested `volumeInfo` object
-                        var volumeInfo = data.volumeInfo;
+                        var volumeInfo = data.items.volumeInfo;
 
                         // Extract and format the desired information
                         var title = volumeInfo.title;
