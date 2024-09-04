@@ -13,7 +13,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-                fetch('/src/json-files/google-books-book.json')
+                fetch('src/json-files/openlibrary-search.json')
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -54,7 +54,7 @@
 </head>
 
 <body>
-    <button>Click me</button>
+    
     <ul id="data-list">
         
     </ul>

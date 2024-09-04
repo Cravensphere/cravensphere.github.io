@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milestone 1</title>
+    <style>
+        ul {
+            list-style-type: none; /* Remove bullet points */
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+                fetch('src/json-files/openlibrary-book.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Clear the list before appending new data
+                        $('#data-list').empty();
+                        
+                        // Access the nested `volumeInfo` object
+                        var volumeInfo = data.volumeInfo;
+
+                        // Extract and format the desired information
+                        var title = volumeInfo.title;
+                        var authors = volumeInfo.authors.join(", "); // Join authors array into a comma-separated string
+                        var publisher = volumeInfo.publisher;
+
+                        // Append the data to the list
+                        $('#data-list').append(
+                            `<li><img src="${volumeInfo.imageLinks.thumbnail}" alt="Book Cover"></li>
+                             <li>Title: ${title}</li>
+                             <li>Author(s): ${authors}</li>
+                             <li>Publisher: ${publisher}</li>
+                             <li>Published Date: ${volumeInfo.publishedDate}</li>
+                             <li>${volumeInfo.description}</li>
+                             <li>Page Count: ${volumeInfo.pageCount}</li>
+                             `
+                        );
+                    })
+                    .catch(error => {
+                        // Handle error
+                        $('#data-list').append('<li>Error loading data.</li>');
+                    });
+            
+        });
+    </script>
+</head>
+
+<body>
+    
+    <ul id="data-list">
+        
+    </ul>
+    <a href="index.html">Home</a>
+</body>
+
+</html>
