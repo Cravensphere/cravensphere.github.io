@@ -29,7 +29,8 @@
                     var publishedDate = book.publish_date || 'N/A';
                     var pageCount = book.pagination || 'N/A';
                     var image = book.cover ? book.cover.medium : 'default-image-url.jpg'; // Provide a default image URL
-
+                    // Format table of contents
+                    var tableOfContents = book.table_of_contents ? book.table_of_contents.map(chapter => `<li>${chapter.title}</li>`).join('') : 'N/A';
                     // Append the data to the list
                     $('#data-list').append(
                         `<li><img src="${image}" alt="Book Cover"></li>
@@ -37,7 +38,9 @@
                          <li>Author(s): ${authors}</li>
                          <li>Publisher: ${publisher}</li>
                          <li>Published Date: ${publishedDate}</li>
-                         <li>Pagination: ${pageCount}</li>`
+                         <li>Pagination: ${pageCount}</li>
+                         <li>Table of Contents: <ul>${tableOfContents}</ul></li>
+                         `
                     );
                 })
                 .catch(error => {
