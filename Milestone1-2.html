@@ -13,43 +13,49 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-                fetch('/src/json-files/google-books-search.json')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Clear the list before appending new data
-                        $('#data-list').empty();
-                        
-                        // Access the nested `volumeInfo` object
-                        var items = data.items;
-                        var volumeInfo = items.volumeInfo;
-
+            fetch('/src/json-files/google-books-search.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Clear the list before appending new data
+                    $('#data-list').empty();
+                    
+                    // Access the items array
+                    var items = data.items;
+    
+                    // Iterate over each item in the array
+                    items.forEach(item => {
+                        var volumeInfo = item.volumeInfo;
+    
                         // Extract and format the desired information
                         var title = volumeInfo.title;
-                        var authors = volumeInfo.authors.join(", "); // Join authors array into a comma-separated string
+                        var authors = volumeInfo.authors ? volumeInfo.authors.join(", ") : "N/A"; // Join authors array into a comma-separated string
                         var publisher = volumeInfo.publisher;
-
+                        var publishedDate = volumeInfo.publishedDate;
+                        var description = volumeInfo.description;
+                        var pageCount = volumeInfo.pageCount;
+                        var thumbnail = volumeInfo.imageLinks ? volumeInfo.imageLinks.thumbnail : "";
+    
                         // Append the data to the list
                         $('#data-list').append(
-                            `<li><img src="${volumeInfo.imageLinks.thumbnail}" alt="Book Cover"></li>
-                             <li>Title: ${items.title}</li>
-                             <li>Author(s): ${items.authors}</li>
-                             <li>Publisher: ${items.publisher}</li>
-                             <li>Published Date: ${volumeInfo.publishedDate}</li>
-                             <li>${volumeInfo.description}</li>
-                             <li>Page Count: ${volumeInfo.pageCount}</li>
-                             `
+                            `<li><img src="${thumbnail}" alt="Book Cover"></li>
+                             <li>Title: ${title}</li>
+                             <li>Author(s): ${authors}</li>
+                             <li>Publisher: ${publisher}</li>
+                             <li>Published Date: ${publishedDate}</li>
+                             <li>Description: ${description}</li>
+                             <li>Page Count: ${pageCount}</li>`
                         );
-                    })
-                    .catch(error => {
-                        // Handle error
-                        $('#data-list').append('<li>Error loading data.</li>');
                     });
-            
+                })
+                .catch(error => {
+                    // Handle error
+                    $('#data-list').append('<li>Error loading data.</li>');
+                });
         });
     </script>
 </head>
