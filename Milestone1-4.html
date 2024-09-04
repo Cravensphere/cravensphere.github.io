@@ -27,8 +27,7 @@
                     var authors = book.authors.map(author => author.name).join(', ') || 'N/A';
                     var publisher = book.publishers.map(publisher => publisher.name).join(', ') || 'N/A';
                     var publishedDate = book.publish_date || 'N/A';
-                    var description = book.description || 'N/A';
-                    var pageCount = book.number_of_pages || 'N/A';
+                    var pageCount = book.pagination || 'N/A';
                     var image = book.cover ? book.cover.medium : 'default-image-url.jpg'; // Provide a default image URL
 
                     // Append the data to the list
@@ -38,8 +37,7 @@
                          <li>Author(s): ${authors}</li>
                          <li>Publisher: ${publisher}</li>
                          <li>Published Date: ${publishedDate}</li>
-                         <li>${description}</li>
-                         <li>Page Count: ${pageCount}</li>`
+                         <li>Pagination: ${pageCount}</li>`
                     );
                 })
                 .catch(error => {
