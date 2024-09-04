@@ -27,7 +27,7 @@
                         // Extract and format the desired information
                         var isbn = book.isbn || 'N/A';
                         var title = book.Title || 'N/A';
-                        var subtitle = book.Subtitle || 'N/A';
+                        var subtitle = book.SubTitle || 'N/A';
                         var description = book.Description || 'N/A';
                         var image = book.Image || 'N/A';
     
@@ -35,6 +35,7 @@
                         $('#data-list').append(
                             `<li><img src="${image}" alt="Book Cover"></li>
                             <li>ISBN: ${isbn}</li> 
+                            <li>Image Path: ${image}</li> 
                             <li>Title: ${title}</li>
                             <li>Subtitle: ${subtitle}</li>
                             <li>Description: ${description}</li>`
