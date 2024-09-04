@@ -26,11 +26,10 @@
                     books.forEach(book => {
                         // Extract and format the desired information
                         var isbn = book.isbn || 'N/A';
-                        var title = book.title || 'N/A';
-                        var subtitle = book.subtitle || 'N/A';
-                        var description = book.description || 'N/A';
-                        // get the image
-                        var image = book.image || 'N/A';
+                        var title = book.Title || 'N/A';
+                        var subtitle = book.Subtitle || 'N/A';
+                        var description = book.Description || 'N/A';
+                        var image = book.Image || 'N/A';
     
                         // Append the data to the list
                         $('#data-list').append(
