@@ -24,22 +24,19 @@
 
                     // Extract and format the desired information
                     var title = book.title_suggest || 'N/A';
-                    var authors = book.authors.map(author => author.name).join(', ') || 'N/A';
-                    var publisher = book.publishers.map(publisher => publisher.name).join(', ') || 'N/A';
-                    var publishedDate = book.publish_date || 'N/A';
-                    var pageCount = book.pagination || 'N/A';
-                    var image = book.cover ? book.cover.medium : 'default-image-url.jpg'; // Provide a default image URL
-                    // Format table of contents
-                    var tableOfContents = book.table_of_contents ? book.table_of_contents.map(chapter => `<li>${chapter.title}</li>`).join('') : 'N/A';
+                    var authors = book.authorname || 'N/A';
+                    var publisher = book.publisher|| 'N/A';
+                    var publishPlace = book.publish_place || 'N/A';
+                    var isbn = book.isbn || 'N/A';
+                    var publishedDate = book.publish_year || 'N/A';
                     // Append the data to the list
                     $('#data-list').append(
-                        `<li><img src="${image}" alt="Book Cover"></li>
-                         <li>Title: ${title}</li>
+                        `<li>Title: ${title}</li>
+                        <li>ISBN: ${isbn}</li>
                          <li>Author(s): ${authors}</li>
                          <li>Publisher: ${publisher}</li>
+                         <li>Publish Place: ${publishPlace}</li>
                          <li>Published Date: ${publishedDate}</li>
-                         <li>Pagination: ${pageCount}</li>
-                         <li>Table of Contents: <ul>${tableOfContents}</ul></li>
                          `
                     );
                 })
