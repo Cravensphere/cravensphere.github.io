@@ -14,12 +14,7 @@
     <script>
         $(document).ready(function () {
             fetch('/src/json-files/google-books-search.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
+
                 .then(data => {
                     // Clear the list before appending new data
                     $('#data-list').empty();
