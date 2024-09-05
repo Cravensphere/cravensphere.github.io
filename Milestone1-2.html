@@ -11,19 +11,27 @@
         }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        ul {
+            list-style-type: none; /* Remove bullet points */
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             fetch('/src/json-files/google-books-search.json')
-
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     // Clear the list before appending new data
                     $('#data-list').empty();
-                    
-                    // Access the items array
-                    var items = data.items;
-    
+                        
                     // Iterate over each item in the array
-                    items.forEach(item => {
+                    data.items.forEach(item => {
                         var volumeInfo = item.volumeInfo;
     
                         // Extract and format the desired information
