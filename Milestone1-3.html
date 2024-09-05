@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milestone 1</title>
+    <title>Milestone 1 - it-ebook-search</title>
     <style>
         ul {
             list-style-type: none; /* Remove bullet points */
@@ -14,7 +14,7 @@
     <script>
         $(document).ready(function () {
             fetch('/src/json-files/it-ebooks-search.json')
-                .then(response => response.json()) // Ensure the response is parsed as JSON
+                
                 .then(data => {
                     // Clear the list before appending new data
                     $('#data-list').empty();

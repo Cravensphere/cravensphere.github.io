@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milestone 1</title>
+    <title>Milestone 1 - google-books-book</title>
     <style>
         ul {
             list-style-type: none; /* Remove bullet points */
@@ -26,7 +26,7 @@
                         var title = volumeInfo.title;
                         var authors = volumeInfo.authors.join(", "); // Join authors array into a comma-separated string
                         var publisher = volumeInfo.publisher;
-
+                        
                         // Append the data to the list
                         $('#data-list').append(
                             `<li><img src="${volumeInfo.imageLinks.thumbnail}" alt="Book Cover"></li>
