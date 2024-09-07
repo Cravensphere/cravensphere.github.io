@@ -10,10 +10,11 @@
             list-style-type: none; /* Remove bullet points */
         }
     </style>
+    <h1>Milestone 1 - openlibary-book</h1>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            fetch('src/json-files/openlibrary-book.json')
+            fetch('src/json-files/openlibrary-book.json')//read the json file
             .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -24,7 +25,7 @@
                     // Clear the list before appending new data
                     $('#data-list').empty();
 
-                    // Access the nested `ISBN:1593274874` object
+                    // Access the nested ISBN:1593274874 object
                     var book = data["ISBN:1593274874"];
 
                     // Extract and format the desired information

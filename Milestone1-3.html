@@ -10,10 +10,13 @@
             list-style-type: none; /* Remove bullet points */
         }
     </style>
+
+    <h1>Milestone 1 - it-ebook-search</h1>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            fetch('/src/json-files/it-ebooks-search.json')
+            fetch('/src/json-files/it-ebooks-search.json')//read the json file
             .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
