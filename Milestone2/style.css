@@ -38,7 +38,6 @@ background-color: #0056b3;
 .grid-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Two columns */
-    grid-template-rows: repeat(2, auto); /* Two rows */
     gap: 20px;
 }
 
