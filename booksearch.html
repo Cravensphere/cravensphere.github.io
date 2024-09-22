@@ -32,21 +32,20 @@
 
             function addPaginationControls(totalItems) {
                 $('#pagination').empty();
-                if (startIndex > 0) {
-                    $('#pagination').append('<button id="prev-button">Previous</button>');
-                }
-                if (totalItems > startIndex + maxResults) {
-                    $('#pagination').append('<button id="next-button">Next</button>');
-                }
+                var totalPages = Math.ceil(totalItems / maxResults);
+                if (totalPages > 1) {
+                    var paginationDropdown = $('<select id="pagination-dropdown"></select>');
+                    for (var i = 0; i < totalPages; i++) {
+                        var option = $('<option></option>').attr('value', i).text('Page ' + (i + 1));
+                        paginationDropdown.append(option);
+                    }
+                    $('#pagination').append(paginationDropdown);
 
-                $('#prev-button').click(function() {
-                    startIndex -= maxResults;
-                    searchBooks($('#search-query').val(), startIndex);
-                });
-                $('#next-button').click(function() {
-                    startIndex += maxResults;
-                    searchBooks($('#search-query').val(), startIndex);
-                });
+                    $('#pagination-dropdown').change(function() {
+                        startIndex = $(this).val() * maxResults;
+                        searchBooks($('#search-query').val(), startIndex);
+                    });
+                }
             }
 
             function searchBooks(query, startIndex) {
