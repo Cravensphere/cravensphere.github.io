@@ -20,6 +20,7 @@
                                 response.items.forEach(function(item) {
                                     var id = item.id;
                                     var title = item.volumeInfo.title;
+                                    var thumbnail = item.volumeInfo.imageLinks;
                                     
     
                                     $('#results').append('<div class="book-result">' +
