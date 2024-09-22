@@ -30,10 +30,31 @@ h1 {
 }
 
 .book-result {
+	display: flex;
 	border: 1px solid #ddd;
 	padding: 10px;
 	margin-bottom: 10px;
 	border-radius: 5px;
+}
+
+.book-cover {
+	width: 128px;
+	height: 192px;
+	margin-right: 10px;
+}
+
+.book-info {
+	flex: 1;
+}
+
+.book-info h2 {
+	margin: 0;
+	font-size: 1.5em;
+	color: #007BFF;
+}
+
+.book-info p {
+	margin: 5px 0;
 }
 
 .book-result h2 {
