@@ -5,6 +5,11 @@ body {
 
 h1 {
 	color: #333;
+	text-align: left;
+}
+
+p {
+	text-align: left;
 }
 
 #search-query {
@@ -20,9 +25,10 @@ h1 {
 	border: none;
 	cursor: pointer;
 }
-
-#search-button:hover {
-	background-color: #0056b3;
+#results {
+	margin-top: 20px;
+	text-align: left;
+background-color: #0056b3;
 }
 
 #results {
@@ -51,8 +57,8 @@ h1 {
 	transform: scale(1.05);
 }
 
-.book-cover {
-	width: 128px;
+.book-info {
+	text-align: left;
 	height: 192px;
 	margin-bottom: 10px;
 }
