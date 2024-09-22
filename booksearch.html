@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Search</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -22,7 +23,7 @@
                                     var publisher = item.volumeInfo.publisher || 'Unknown Publisher';
                                     var publishedDate = item.volumeInfo.publishedDate || 'Unknown Date';
                                     var description = item.volumeInfo.description || 'No description available';
-    
+
                                     $('#results').append('<div class="book-result">' +
                                         '<h2>' + title + '</h2>' +
                                         '<p><strong>Authors:</strong> ' + authors + '</p>' +
@@ -47,13 +48,11 @@
             });
         });
     </script>
+</head>
 <body>
     <h1>Book Search</h1>
     <input type="text" id="search-query" placeholder="Enter book title or author">
     <button id="search-button">Search</button>
     <div id="results"></div>
-
-    <p><a href="index">Home</a> Back to Home</p>
-</head>
-
+</body>
 </html>

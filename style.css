@@ -1,0 +1,47 @@
+body {
+	font-family: Arial, sans-serif;
+	margin: 20px;
+}
+
+h1 {
+	color: #333;
+}
+
+#search-query {
+	width: 300px;
+	padding: 10px;
+	margin-right: 10px;
+}
+
+#search-button {
+	padding: 10px 20px;
+	background-color: #007BFF;
+	color: white;
+	border: none;
+	cursor: pointer;
+}
+
+#search-button:hover {
+	background-color: #0056b3;
+}
+
+#results {
+	margin-top: 20px;
+}
+
+.book-result {
+	border: 1px solid #ddd;
+	padding: 10px;
+	margin-bottom: 10px;
+	border-radius: 5px;
+}
+
+.book-result h2 {
+	margin: 0;
+	font-size: 1.5em;
+	color: #007BFF;
+}
+
+.book-result p {
+	margin: 5px 0;
+}
