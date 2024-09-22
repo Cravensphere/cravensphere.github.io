@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Search</title>
+    <title>Book Details</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
@@ -25,7 +25,7 @@
                                     var publishedDate = item.volumeInfo.publishedDate || 'Unknown Date';
                                     var description = item.volumeInfo.description || 'No description available';
                                     var thumbnail = item.volumeInfo.imageLinks;
-
+    
                                     $('#results').append('<div class="book-result">' +
                                         '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
                                         '<div class="book-info">' +
@@ -52,6 +52,55 @@
                 }
             });
         });
+    
+        // Function to get query parameters from URL
+        function getQueryParams() {
+            var params = {};
+            var queryString = window.location.search.substring(1);
+            var regex = /([^&=]+)=([^&]*)/g;
+            var m;
+            while (m = regex.exec(queryString)) {
+                params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+            }
+            return params;
+        }
+    
+        var params = getQueryParams();
+        var bookId = params['id'];
+    
+        if (bookId) {
+            $.ajax({
+                url: 'https://www.googleapis.com/books/v1/volumes/' + bookId,
+                method: 'GET',
+                success: function(response) {
+                    $('#results').empty();
+                    var item = response;
+                    var title = item.volumeInfo.title;
+                    var authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author';
+                    var publisher = item.volumeInfo.publisher || 'Unknown Publisher';
+                    var publishedDate = item.volumeInfo.publishedDate || 'Unknown Date';
+                    var description = item.volumeInfo.description || 'No description available';
+                    var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
+    
+                    $('#results').append('<div class="book-result">' +
+                        '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
+                        '<div class="book-info">' +
+                        '<h2>' + title + '</h2>' +
+                        '<p><strong>Authors:</strong> ' + authors + '</p>' +
+                        '<p><strong>Publisher:</strong> ' + publisher + '</p>' +
+                        '<p><strong>Published Date:</strong> ' + publishedDate + '</p>' +
+                        '<p><strong>Description:</strong> ' + description + '</p>' +
+                        '</div>' +
+                        '</div>');
+                },
+                error: function() {
+                    $('#results').empty();
+                    $('#results').append('<p>An error occurred while fetching the book details</p>');
+                }
+            });
+        } else {
+            $('#results').append('<p>No book ID provided in the URL</p>');
+        }
     </script>
 </head>
 <body>
@@ -59,5 +108,6 @@
     <input type="text" id="search-query" placeholder="Enter book title or author">
     <button id="search-button">Search</button>
     <div id="results"></div>
+    <p><a href="Milestone2">Home</a></p>
 </body>
 </html>
