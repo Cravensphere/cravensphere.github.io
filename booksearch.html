@@ -20,21 +20,13 @@
                                 response.items.forEach(function(item) {
                                     var id = item.id;
                                     var title = item.volumeInfo.title;
-                                    var authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author';
-                                    var publisher = item.volumeInfo.publisher || 'Unknown Publisher';
-                                    var publishedDate = item.volumeInfo.publishedDate || 'Unknown Date';
-                                    var description = item.volumeInfo.description || 'No description available';
-                                    var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
+                                    var thumbnail = item.volumeInfo.imageLinks;
+                                    
     
                                     $('#results').append('<div class="book-result">' +
-                                        '<br>'+
                                         '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
                                         '<div class="book-info">' +
                                         '<h2><a href="bookDetails.html?id=' + id + '" target="_blank">' + title + '</a></h2>' +
-                                        '<p><strong>Authors:</strong> ' + authors + '</p>' +
-                                        '<p><strong>Publisher:</strong> ' + publisher + '</p>' +
-                                        '<p><strong>Published Date:</strong> ' + publishedDate + '</p>' +
-                                        '<p><strong>Description:</strong> ' + description + '</p>' +
                                         '</div>' +
                                         '</div>');
                                 });
@@ -62,6 +54,7 @@
     <input type="text" id="search-query" placeholder="Enter book title or author">
     <button id="search-button">Search</button>
     
+    <br>
     
     <div id="results"></div>
 </body>
