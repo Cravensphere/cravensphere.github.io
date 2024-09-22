@@ -24,8 +24,8 @@
                                     var publisher = item.volumeInfo.publisher || 'Unknown Publisher';
                                     var publishedDate = item.volumeInfo.publishedDate || 'Unknown Date';
                                     var description = item.volumeInfo.description || 'No description available';
-                                    var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
-    
+                                    var thumbnail = item.volumeInfo.imageLinks;
+
                                     $('#results').append('<div class="book-result">' +
                                         '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
                                         '<div class="book-info">' +
