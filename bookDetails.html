@@ -12,7 +12,7 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 return urlParams.get('id');
             }
-    
+
             function fetchBookDetails(bookId) {
                 $.ajax({
                     url: 'https://www.googleapis.com/books/v1/volumes/' + bookId,
@@ -26,7 +26,7 @@
                             var publishedDate = response.volumeInfo.publishedDate || 'Unknown Date';
                             var description = response.volumeInfo.description || 'No description available';
                             var thumbnail = response.volumeInfo.imageLinks ? response.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
-    
+
                             $('#results').append('<div class="book-detail">' +
                                 '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
                                 '<div class="book-info">' +
@@ -41,13 +41,14 @@
                             $('#results').append('<p>No details found for this book</p>');
                         }
                     },
-                    error: function() {
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error fetching book details:', textStatus, errorThrown);
                         $('#results').empty();
                         $('#results').append('<p>An error occurred while fetching the book details</p>');
                     }
                 });
             }
-    
+
             var bookId = getBookIdFromUrl();
             if (bookId) {
                 fetchBookDetails(bookId);
@@ -58,8 +59,9 @@
     </script>
 </head>
 <body>
-    
-    <p><a href="booksearch">Home</a> Search for a book </p>
-    <p><a href="MyBookshelf">My Bookshelf</a> A list of my favorite books </p>
+    <h1>Book Details</h1>
+    <p><a href="booksearch.html">Home</a> Search for a book </p>
+    <p><a href="MyBookshelf.html">My Bookshelf</a> A list of my favorite books </p>
+    <div id="results"></div>
 </body>
 </html>
