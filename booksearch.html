@@ -20,7 +20,8 @@
                                 response.items.forEach(function(item) {
                                     var id = item.id;
                                     var title = item.volumeInfo.title;
-                                    var thumbnail = item.volumeInfo.imageLinks;
+                                    var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
+
                                     
     
                                     $('#results').append('<div class="book-result">' +
