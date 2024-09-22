@@ -25,7 +25,12 @@
                                 response.items.forEach(function(item) {
                                     var title = item.volumeInfo.title;
                                     var authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author';
+                                    var publisher = item.volumeInfo.publisher ? item.volumeInfo.publisher.join(', ') : 'Unknown Publisher';
+                                    var publishedDate = item.volumeInfo.publishedDate
+                                    var description = item.volumeInfo.description;
                                     $('#results').append('<p><strong>' + title + '</strong> by ' + authors + '</p>');
+                                    $('#results').append('<p>' + publisher + ', ' + publishedDate + '</p>');
+                                    $('#results').append('<p>' + description + '</p>');
                                 });
                             } else {
                                 $('#results').append('<p>No results found</p>');
@@ -42,7 +47,7 @@
                 }
             });
         });
-    </script>itle>Document</title>
+    </script>
 </head>
 <body>
     
