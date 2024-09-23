@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookshelf</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function fetchBookshelf() {
+
+                $.ajax({
+                    url: `https://www.googleapis.com/books/v1/users/111136193298674250069/bookshelves`,
+                    method: 'GET',
+                    success: function(response) {
+                        $('#bookshelf').empty();
+                        if (response.items) {
+                            response.items.forEach(function(item) {
+                                var id = item.id;
+                                var title = item.volumeInfo.title;
+                                var authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author';
+                                var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
+
+                                $('#bookshelf').append('<div class="book-item">' +
+                                    '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
+                                    '<div class="book-info">' +
+                                    '<h2><a href="bookDetails.html?id=' + id + '">' + title + '</a></h2>' +
+                                    '<p><strong>Authors:</strong> ' + authors + '</p>' +
+                                    '</div>' +
+                                    '</div>');
+                            });
+                        } else {
+                            $('#bookshelf').append('<p>No books found in this bookshelf</p>');
+                        }
+                    },
+                    error: function() {
+                        $('#bookshelf').empty();
+                        $('#bookshelf').append('<p>An error occurred while fetching the bookshelf</p>');
+                    }
+                });
+            }
+
+            fetchBookshelf();
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>My Bookshelf</h1>
+        <nav>
+            <a href="booksearch.html">Home</a>
+            <a href="MyBookshelf.html">My Bookshelf</a>
+        </nav>
+    </header>
+    <main>
+        <div id="bookshelf" class="grid-container"></div>
+    </main>
+</body>
+</html>

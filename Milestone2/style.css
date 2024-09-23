@@ -32,16 +32,13 @@ p {
 }
 
 .grid-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-.grid-container {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr); /* Two columns */
 	gap: 20px;
 	padding: 20px;
-}padding: 10px;
-.book-result {
+}
+
+.book-item {
 	border: 1px solid #ddd;
 	padding: 10px;
 	border-radius: 5px;
@@ -49,7 +46,7 @@ p {
 	transition: transform 0.2s;
 }
 
-.book-result:hover {
+.book-item:hover {
 	transform: scale(1.05);
 }
 
@@ -71,8 +68,23 @@ p {
 
 .book-info p {
 	margin: 5px 0;
-}margin-top: 20px;
+}
+
+.grid-container {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr); /* Two columns */
+	gap: 20px;
+	padding: 20px;
+}
+
+footer {
+	background-color: #007BFF;
+	color: white;
 	text-align: center;
+	padding: 10px 0;
+	position: fixed;
+	width: 100%;
+	bottom: 0;
 }
 
 #pagination button {
