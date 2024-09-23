@@ -82,14 +82,20 @@
     </script>
 </head>
 <body>
-    <h1>Book Search</h1>
-    <p><a href="booksearch">Home</a> Search for a book </p>
-    <p><a href="MyBookshelf">My Bookshelf</a> A list of my favorite books </p>
-    <h1>Book Search</h1>
-    <input type="text" id="search-query" placeholder="Enter book title or author">
-    <button id="search-button">Search</button>
-    <br>
-    <div id="results" class="grid-container"></div>
-    <div id="pagination"></div>
+    <header>
+        <h1>Book Search</h1>
+        <nav>
+            <a href="booksearch.html">Home</a>
+            <a href="MyBookshelf.html">My Bookshelf</a>
+        </nav>
+    </header>
+    <main>
+        <div class="search-container">
+            <input type="text" id="search-query" placeholder="Enter book title or author">
+            <button id="search-button">Search</button>
+        </div>
+        <div id="results" class="grid-container"></div>
+        <div id="pagination"></div>
+    </main>
 </body>
 </html>
