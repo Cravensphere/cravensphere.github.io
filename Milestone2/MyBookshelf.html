@@ -9,9 +9,8 @@
     <script>
         $(document).ready(function() {
             function fetchBookshelf() {
-
                 $.ajax({
-                    url: `https://www.googleapis.com/books/v1/users/111136193298674250069/bookshelves`,
+                    url: 'https://www.googleapis.com/books/v1/users/111136193298674250069/bookshelves/1001/volumes',
                     method: 'GET',
                     success: function(response) {
                         $('#bookshelf').empty();
