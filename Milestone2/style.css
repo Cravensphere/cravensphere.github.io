@@ -44,7 +44,7 @@ p {
 	border: 1px solid #ddd;
 	padding: 10px;
 	border-radius: 5px;
-	background-color: white;
+	background-color: #007BFF;
 	transition: transform 0.2s;
 }
 
