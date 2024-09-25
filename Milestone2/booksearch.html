@@ -68,7 +68,7 @@
                 });
             }
 
-            $('#search-button').click(function() {
+            function handleSearch() {
                 var query = $('#search-query').val();
                 if (query) {
                     startIndex = 0; // Reset to the first page
@@ -76,6 +76,16 @@
                 } else {
                     $('#results').empty();
                     $('#results').append('<p>Please enter a search query</p>');
+                }
+            }
+
+            $('#search-button').click(function() {
+                handleSearch();
+            });
+
+            $('#search-query').keypress(function(event) {
+                if (event.which == 13) { // Enter key pressed
+                    handleSearch();
                 }
             });
         });
