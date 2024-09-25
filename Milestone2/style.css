@@ -1,7 +1,7 @@
 body {
 	font-family: Arial, sans-serif;
 	margin: 20px;
-	background-color: skyblue;
+	background-color: lightblue;
 }
 
 h1 {
@@ -48,7 +48,7 @@ p {
 	border: 1px solid #ddd;
 	padding: 10px;
 	border-radius: 5px;
-	background-color: #007BFF;
+	background-color: #a8ccf3;
 	transition: transform 0.2s;
 }
 
