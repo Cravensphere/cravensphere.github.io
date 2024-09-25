@@ -1,6 +1,7 @@
 body {
 	font-family: Arial, sans-serif;
 	margin: 20px;
+	background-color: #ADD8E6; /* Light blue background */
 }
 
 h1 {
@@ -25,6 +26,7 @@ p {
 	border: none;
 	cursor: pointer;
 }
+
 #results {
 	margin-top: 20px;
 	text-align: left;
@@ -69,15 +71,6 @@ p {
 .book-info p {
 	margin: 5px 0;
 }
-
-.grid-container {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr); /* Two columns */
-	gap: 20px;
-	padding: 20px;
-}
-
-
 
 #pagination button {
 	padding: 10px 20px;
