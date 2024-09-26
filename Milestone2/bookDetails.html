@@ -27,6 +27,7 @@
                             var description = response.volumeInfo.description || 'No description available';
                             var thumbnail = response.volumeInfo.imageLinks ? response.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
                             var infoLink = response.volumeInfo.infoLink;
+                            var price = response.saleInfo.listPrice ? response.saleInfo.listPrice.amount : 'Free';
 
                             $('#results').append('<div class="book-detail">' +
                                 '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
@@ -37,6 +38,7 @@
                                 '<p><strong>Published Date:</strong> ' + publishedDate + '</p>' +
                                 '<p><strong>Description:</strong> ' + description + '</p>' +
                                 '<a href="' + infoLink + '" target="_blank">Google play link</a>' +
+                                '<p><strong>Price:</strong> $' + price + '</p>' +
                                 '</div>' +
                                 '</div>');
                         } else {
