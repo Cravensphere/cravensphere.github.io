@@ -20,7 +20,8 @@
                     var publishedDate = item.volumeInfo.publishedDate || 'Unknown Date';
                     var description = item.volumeInfo.description || 'No description available';
                     var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
-
+                    
+                    // Append the data to the list
                     $('#results').append('<div class="book-result">' +
                         '<div class="book-info">' +
                         '<h2><a href="bookDetails.html?id=' + id + '">' + title + '</a></h2>' +
@@ -30,7 +31,7 @@
                 });
             }
 
-            function addPaginationControls(totalItems) {
+            function addPaginationControls(totalItems) { // Adds a drop down menu for changing pages
                 $('#pagination').empty();
                 var totalPages = Math.ceil(totalItems / maxResults);
                 if (totalPages > 1) {
@@ -48,7 +49,7 @@
                 }
             }
 
-            function searchBooks(query, startIndex) {
+            function searchBooks(query, startIndex) { // Fetches books from the Google Books API
                 $.ajax({
                     url: 'https://www.googleapis.com/books/v1/volumes?q=' + query + '&startIndex=' + startIndex + '&maxResults=' + maxResults,
                     method: 'GET',
@@ -69,7 +70,7 @@
             }
 
             function handleSearch() {
-                var query = $('#search-query').val();
+                var query = $('#search-query').val(); 
                 if (query) {
                     startIndex = 0; // Reset to the first page
                     searchBooks(query, startIndex);
@@ -79,11 +80,11 @@
                 }
             }
 
-            $('#search-button').click(function() {
+            $('#search-button').click(function() { // Handle search when button is clicked
                 handleSearch();
             });
 
-            $('#search-query').keypress(function(event) {
+            $('#search-query').keypress(function(event) { // Handle search when Enter key is pressed
                 if (event.which == 13) { // Enter key pressed
                     handleSearch();
                 }

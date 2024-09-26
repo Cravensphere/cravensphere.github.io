@@ -8,8 +8,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            function getBookIdFromUrl() {
-                const urlParams = new URLSearchParams(window.location.search);
+            function getBookIdFromUrl() { // Get the book ID from the URL
+                const urlParams = new URLSearchParams(window.location.search); 
                 return urlParams.get('id');
             }
 
@@ -29,6 +29,7 @@
                             var infoLink = response.volumeInfo.infoLink;
                             var price = response.saleInfo.listPrice ? response.saleInfo.listPrice.amount : 'Free';
 
+                            // Append the data to the list
                             $('#results').append('<div class="book-detail">' +
                                 '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
                                 '<div class="book-info">' +
@@ -45,7 +46,7 @@
                             $('#results').append('<p>No details found for this book</p>');
                         }
                     },
-                    error: function(jqXHR, textStatus, errorThrown) {
+                    error: function(jqXHR, textStatus, errorThrown) { // Error handling
                         console.error('Error fetching book details:', textStatus, errorThrown);
                         $('#results').empty();
                         $('#results').append('<p>An error occurred while fetching the book details</p>');
@@ -53,9 +54,9 @@
                 });
             }
 
-            var bookId = getBookIdFromUrl();
+            var bookId = getBookIdFromUrl(); 
             if (bookId) {
-                fetchBookDetails(bookId);
+                fetchBookDetails(bookId); 
             } else {
                 $('#results').append('<p>No book ID found in the URL</p>');
             }
