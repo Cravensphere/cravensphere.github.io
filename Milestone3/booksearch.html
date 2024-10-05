@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Search</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var startIndex = 0;
+            var maxResults = 10;
+            var totalResultsLimit = 50;
+
+            function appendBookResults(items) {
+                items.forEach(function(item) {
+                    var id = item.id;
+                    var title = item.volumeInfo.title;
+                    var authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author';
+                    var publisher = item.volumeInfo.publisher || 'Unknown Publisher';
+                    var publishedDate = item.volumeInfo.publishedDate || 'Unknown Date';
+                    var description = item.volumeInfo.description || 'No description available';
+                    var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
+                    
+                    // Append the data to the list
+                    $('#results').append('<div class="book-result">' +
+                        '<div class="book-info">' +
+                        '<h2><a href="bookDetails.html?id=' + id + '">' + title + '</a></h2>' +
+                        '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
+                        '</div>' +
+                        '</div>');
+                });
+            }
+
+            function addPaginationControls(totalItems) {
+                $('#pagination').empty();
+                var totalPages = Math.ceil(totalItems / maxResults);
+                if (totalPages > 1) {
+                    for (var i = 0; i < totalPages; i++) {
+                        var button = $('<button></button>').attr('data-page', i).text('Page ' + (i + 1));
+                        $('#pagination').append(button);
+                    }
+
+                    $('#pagination button').click(function() {
+                        startIndex = $(this).attr('data-page') * maxResults;
+                        searchBooks($('#search-query').val(), startIndex);
+                    });
+                }
+            }
+
+            function searchBooks(query, startIndex) {
+                $.ajax({
+                    url: 'https://www.googleapis.com/books/v1/volumes?q=' + query + '&startIndex=' + startIndex + '&maxResults=' + maxResults,
+                    method: 'GET',
+                    success: function(response) {
+                        $('#results').empty();
+                        if (response.items) {
+                            appendBookResults(response.items);
+                            addPaginationControls(Math.min(response.totalItems, totalResultsLimit));
+                        } else {
+                            $('#results').append('<p>No results found</p>');
+                        }
+                    },
+                    error: function() {
+                        $('#results').empty();
+                        $('#results').append('<p>An error occurred while fetching the results</p>');
+                    }
+                });
+            }
+
+            $('#search-button').click(function() {
+                var query = $('#search-query').val();
+                if (query) {
+                    startIndex = 0; // Reset to the first page
+                    searchBooks(query, startIndex);
+                } else {
+                    $('#results').empty();
+                    $('#results').append('<p>Please enter a search query</p>');
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Book Search</h1>
+        <nav>
+            <a href="booksearch.html">Home</a>
+            <a href="MyBookshelf.html">My Bookshelf</a>
+        </nav>
+    </header>
+    <main>
+        <div class="search-container">
+            <input type="text" id="search-query" placeholder="Enter book title or author">
+            <button id="search-button">Search</button>
+        </div>
+        <div id="results" class="grid-container"></div>
+        <div id="pagination"></div>
+    </main>
+    <footer>
+        <p>&copy; 2023 Book Search. All rights reserved.</p>
+    </footer>
+</body>
+</html>
