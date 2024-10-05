@@ -115,7 +115,7 @@
                 });
             }
 
-            $('#search-button').click(function() {
+            function triggerSearch() {
                 var query = $('#search-query').val();
                 if (query) {
                     startIndex = 0; // Reset to the first page
@@ -124,14 +124,64 @@
                     $('#results').empty();
                     $('#results').append('<p>Please enter a search query</p>');
                 }
+            }
+
+            $('#search-button').click(function() {
+                triggerSearch();
             });
+
+            $('#search-query').keypress(function(event) {
+                if (event.which === 13) { // Enter key pressed
+                    triggerSearch();
+                }
+            });
+
+            function fetchBookshelf() {
+                $.ajax({
+                    url: 'https://www.googleapis.com/books/v1/users/111136193298674250069/bookshelves/1001/volumes',
+                    method: 'GET',
+                    success: function(response) {
+                        $('#bookshelf').empty();
+                        if (response.items) {
+                            response.items.forEach(function(item) {
+                                var id = item.id;
+                                var title = item.volumeInfo.title;
+                                var authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author';
+                                var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
+
+                                $('#bookshelf').append('<div class="book-item">' +
+                                    '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
+                                    '<div class="book-info">' +
+                                    '<h2><a href="#" class="book-title" data-id="' + id + '">' + title + '</a></h2>' +
+                                    '<p><strong>Authors:</strong> ' + authors + '</p>' +
+                                    '</div>' +
+                                    '</div>');
+                            });
+
+                            // Add click event for book titles
+                            $('.book-title').click(function(event) {
+                                event.preventDefault();
+                                var bookId = $(this).data('id');
+                                fetchBookDetails(bookId);
+                            });
+                        } else {
+                            $('#bookshelf').append('<p>No books found in this bookshelf</p>');
+                        }
+                    },
+                    error: function() {
+                        $('#bookshelf').empty();
+                        $('#bookshelf').append('<p>An error occurred while fetching the bookshelf</p>');
+                    }
+                });
+            }
+
+            fetchBookshelf();
         });
     </script>
 </head>
 <body>
     <header>
         <h1>Book Search</h1>
-        
     </header>
     <main>
         <div class="search-container">
@@ -141,6 +191,8 @@
         <div id="results" class="grid-container"></div>
         <div id="pagination"></div>
         <div id="book-details"></div>
+        <h2>My Bookshelf</h2>
+        <div id="bookshelf" class="grid-container"></div>
     </main>
     
 </body>
