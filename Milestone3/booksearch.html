@@ -15,21 +15,19 @@
             function appendBookResults(items) {
                 items.forEach(function(item) {
                     var id = item.id;
-                    var title = item.volumeInfo.title;
-                    var authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author';
-                    var publisher = item.volumeInfo.publisher || 'Unknown Publisher';
-                    var publishedDate = item.volumeInfo.publishedDate || 'Unknown Date';
-                    var description = item.volumeInfo.description || 'No description available';
-                    var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
-                    
-                    // Append the data to the list
-                    $('#results').append('<div class="book-result">' +
-                        '<div class="book-info">' +
-                        '<h2><a href="#" class="book-title" data-id="' + id + '">' + title + '</a></h2>' +
-                        '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
-                        '</div>' +
-                        '</div>');
-                });
+                                var title = item.volumeInfo.title;
+                                var authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author';
+                                var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
+
+                                $('#bookshelf').append('<div class="book-item">' +
+                                    '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
+                                    '<div class="book-info">' +
+                                    '<h2><a href="#" class="book-title" data-id="' + id + '">' + title + '</a></h2>' +
+                                    '<p><strong>Authors:</strong> ' + authors + '</p>' +
+                                    '</div>' +
+                                    '</div>');
+                            });
+                
 
                 // Add click event for book titles
                 $('.book-title').click(function(event) {
