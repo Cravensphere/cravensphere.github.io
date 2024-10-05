@@ -44,7 +44,7 @@
                 var totalPages = Math.ceil(totalItems / maxResults);
                 if (totalPages > 1) {
                     for (var i = 0; i < totalPages; i++) {
-                        var button = $('<button></button>').attr('data-page', i).text('Page ' + (i + 1));
+                        var button = $('<button></button>').attr('data-page', i).text((i + 1));
                         $('#pagination').append(button);
                     }
 
