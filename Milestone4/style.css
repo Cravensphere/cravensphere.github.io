@@ -26,7 +26,7 @@ nav a:hover {
     text-decoration: underline;
 }
 
-search-container {
+.search-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,7 +76,7 @@ search-container {
 }
 
 .book-item:hover {
-    transform: scale(1.05);
+    transform: none;
 }
 
 .book-cover {
@@ -119,6 +119,10 @@ search-container {
 }
 
 #pagination button:hover {
+    background-color: #0056b3;
+}
+
+#pagination button.active {
     background-color: #0056b3;
 }
 
