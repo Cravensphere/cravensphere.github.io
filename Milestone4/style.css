@@ -26,7 +26,7 @@ nav a:hover {
     text-decoration: underline;
 }
 
-search-container {
+.search-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,18 +41,23 @@ search-container {
     border-radius: 5px;
 }
 
-#search-button, #toggle-layout {
+#search-button {
     padding: 10px 20px;
     background-color: #007BFF;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-left: 10px;
 }
 
-#search-button:hover, #toggle-layout:hover {
+#search-button:hover {
     background-color: #0056b3;
+}
+
+#results {
+    margin-top: 20px;
+    text-align: left;
+    background-color: #a8ccf3;
 }
 
 .grid-container {
@@ -62,12 +67,7 @@ search-container {
     padding: 20px;
 }
 
-.list-container {
-    display: block;
-    padding: 20px;
-}
-
-.book-item {
+.book-result {
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 5px;
@@ -75,7 +75,7 @@ search-container {
     transition: transform 0.2s;
 }
 
-.book-item:hover {
+.book-result:hover {
     transform: scale(1.05);
 }
 
@@ -97,10 +97,6 @@ search-container {
 
 .book-info p {
     margin: 5px 0;
-}
-
-.list-item .book-cover {
-    display: none;
 }
 
 #pagination {
