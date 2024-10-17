@@ -13,7 +13,7 @@
             var maxResults = 10;
             var totalResultsLimit = 50;
 
-            var bookTemplate = `
+            var template = `
                 <div class="book-item">
                     <img src="{{thumbnail}}" alt="Book cover" class="book-cover">
                     <div class="book-info">
@@ -21,12 +21,6 @@
                         <p><strong>Authors:</strong> {{authors}}</p>
                     </div>
                 </div>
-            `;
-
-            var paginationTemplate = `
-                {{#pages}}
-                    <button data-page="{{page}}" class="pagination-button">{{page}}</button>
-                {{/pages}}
             `;
 
             function appendBookResults(items) {
@@ -37,7 +31,7 @@
                         authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author',
                         thumbnail: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image'
                     };
-                    var rendered = Mustache.render(bookTemplate, data);
+                    var rendered = Mustache.render(template, data);
                     $('#results').append(rendered);
                 });
 
@@ -53,16 +47,13 @@
                 $('#pagination').empty();
                 var totalPages = Math.ceil(totalItems / maxResults);
                 if (totalPages > 1) {
-                    var pages = [];
-                    for (var i = 1; i <= totalPages; i++) {
-                        pages.push({ page: i });
+                    for (var i = 0; i < totalPages; i++) {
+                        var button = $('<button></button>').attr('data-page', i).text((i + 1));
+                        $('#pagination').append(button);
                     }
-                    var rendered = Mustache.render(paginationTemplate, { pages: pages });
-                    $('#pagination').append(rendered);
 
-                    // Add click event for pagination buttons
-                    $('.pagination-button').click(function() {
-                        startIndex = ($(this).data('page') - 1) * maxResults;
+                    $('#pagination button').click(function() {
+                        startIndex = $(this).attr('data-page') * maxResults;
                         searchBooks($('#search-query').val(), startIndex);
                     });
                 }
@@ -157,13 +148,18 @@
                         $('#bookshelf').empty();
                         if (response.items) {
                             response.items.forEach(function(item) {
+                                var id = item.id;
+                                var title = item.volumeInfo.title;
+                                var authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author';
+                                var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
+
                                 var data = {
-                                    id: item.id,
-                                    title: item.volumeInfo.title,
-                                    authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author',
-                                    thumbnail: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image'
+                                    id: id,
+                                    title: title,
+                                    authors: authors,
+                                    thumbnail: thumbnail
                                 };
-                                var rendered = Mustache.render(bookTemplate, data);
+                                var rendered = Mustache.render(template, data);
                                 $('#bookshelf').append(rendered);
                             });
 
@@ -203,6 +199,5 @@
         <h2>My Bookshelf</h2>
         <div id="bookshelf" class="grid-container"></div>
     </main>
-    
 </body>
 </html>
