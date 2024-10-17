@@ -6,8 +6,7 @@
     <title>Book Search</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.2.1/mustache.min.js"></script>
-    <script type="text/javascript" src="mustache.js" ></script>
+    <script type="text/javascript" src="mustache.js"></script>
 </head>
 <body>
     <header>
@@ -17,6 +16,7 @@
         <div class="search-container">
             <input type="text" id="search-query" placeholder="Enter book title or author">
             <button id="search-button">Search</button>
+            <button id="toggle-layout">Toggle Layout</button>
         </div>
         <div id="results" class="grid-container"></div>
         <div id="pagination"></div>
@@ -29,6 +29,7 @@
             var startIndex = 0;
             var maxResults = 10;
             var totalResultsLimit = 50;
+            var isGridLayout = true;
 
             var bookTemplate = `
                 <div class="book-item">
@@ -136,6 +137,17 @@
             $('#search-query').keypress(function(event) {
                 if (event.which === 13) { // Enter key pressed
                     triggerSearch();
+                }
+            });
+
+            $('#toggle-layout').click(function() {
+                isGridLayout = !isGridLayout;
+                if (isGridLayout) {
+                    $('#results').removeClass('list-container').addClass('grid-container');
+                    $('#bookshelf').removeClass('list-container').addClass('grid-container');
+                } else {
+                    $('#results').removeClass('grid-container').addClass('list-container');
+                    $('#bookshelf').removeClass('grid-container').addClass('list-container');
                 }
             });
 
