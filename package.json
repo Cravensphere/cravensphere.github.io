@@ -5,6 +5,7 @@
     "start": "sirv ./src public --cors --single --no-clear --port 8000"
   },
   "dependencies": {
-    "mustache": "^4.2.0"
+    "mustache": "^4.2.0",
+    "require": "^2.4.20"
   }
 }
