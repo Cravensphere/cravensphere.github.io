@@ -13,7 +13,11 @@
         <h1>Book Search</h1>
     </header>
     <main>
-        <div id="search-container"></div>
+        <div class="search-container">
+            <input type="text" id="search-query" placeholder="Enter book title or author">
+            <button id="search-button">Search</button>
+            <button id="toggle-layout">Toggle Layout</button>
+        </div>
         <div id="results" class="grid-container"></div>
         <div id="pagination"></div>
         <div id="book-details"></div>
@@ -28,14 +32,6 @@
             var currentPage = 1;
             var isGridLayout = true;
             var currentResults = [];
-
-            var searchTemplate = `
-                <div class="search-container">
-                    <input type="text" id="search-query" placeholder="Enter book title or author">
-                    <button id="search-button">Search</button>
-                    <button id="toggle-layout">Toggle Layout</button>
-                </div>
-            `;
 
             var bookTemplate = `
                 <div class="book-item">
@@ -55,24 +51,6 @@
                     </div>
                 </div>
             `;
-
-            var bookDetailTemplate = `
-                <div class="book-detail">
-                    <img src="{{thumbnail}}" alt="Book cover" class="book-cover">
-                    <div class="book-info">
-                        <h2>{{title}}</h2>
-                        <p><strong>Authors:</strong> {{authors}}</p>
-                        <p><strong>Publisher:</strong> {{publisher}}</p>
-                        <p><strong>Published Date:</strong> {{publishedDate}}</p>
-                        <p><strong>Description:</strong> {{description}}</p>
-                        <a href="{{infoLink}}" target="_blank">Google Play link</a>
-                        <p><strong>Price:</strong> ${{price}}</p>
-                    </div>
-                </div>
-            `;
-
-            // Render the search bar
-            $('#search-container').html(Mustache.render(searchTemplate));
 
             function appendBookResults(items) {
                 $('#results').empty();
@@ -125,18 +103,28 @@
                     success: function(response) {
                         $('#book-details').empty();
                         if (response) {
-                            var data = {
-                                title: response.volumeInfo.title,
-                                authors: response.volumeInfo.authors ? response.volumeInfo.authors.join(', ') : 'Unknown Author',
-                                publisher: response.volumeInfo.publisher || 'Unknown Publisher',
-                                publishedDate: response.volumeInfo.publishedDate || 'Unknown Date',
-                                description: response.volumeInfo.description || 'No description available',
-                                thumbnail: response.volumeInfo.imageLinks ? response.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image',
-                                infoLink: response.volumeInfo.infoLink,
-                                price: response.saleInfo.listPrice ? response.saleInfo.listPrice.amount : 'Free'
-                            };
-                            var rendered = Mustache.render(bookDetailTemplate, data);
-                            $('#book-details').append(rendered);
+                            var title = response.volumeInfo.title;
+                            var authors = response.volumeInfo.authors ? response.volumeInfo.authors.join(', ') : 'Unknown Author';
+                            var publisher = response.volumeInfo.publisher || 'Unknown Publisher';
+                            var publishedDate = response.volumeInfo.publishedDate || 'Unknown Date';
+                            var description = response.volumeInfo.description || 'No description available';
+                            var thumbnail = response.volumeInfo.imageLinks ? response.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
+                            var infoLink = response.volumeInfo.infoLink;
+                            var price = response.saleInfo.listPrice ? response.saleInfo.listPrice.amount : 'Free';
+
+                            // Append the data to the book details section
+                            $('#book-details').append('<div class="book-detail">' +
+                                '<img src="' + thumbnail + '" alt="Book cover" class="book-cover">' +
+                                '<div class="book-info">' +
+                                '<h2>' + title + '</h2>' +
+                                '<p><strong>Authors:</strong> ' + authors + '</p>' +
+                                '<p><strong>Publisher:</strong> ' + publisher + '</p>' +
+                                '<p><strong>Published Date:</strong> ' + publishedDate + '</p>' +
+                                '<p><strong>Description:</strong> ' + description + '</p>' +
+                                '<a href="' + infoLink + '" target="_blank">Google Play link</a>' +
+                                '<p><strong>Price:</strong> $' + price + '</p>' +
+                                '</div>' +
+                                '</div>');
                         } else {
                             $('#book-details').append('<p>No details found for this book</p>');
                         }
