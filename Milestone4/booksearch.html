@@ -175,42 +175,17 @@
 
             function updatePagination() {
                 $('#pagination').empty();
-                var totalPages = Math.ceil(totalResults / maxResults);
-                var maxPagesToShow = 5;
-
+                var totalPages = Math.ceil(totalItems / maxResults);
                 if (totalPages > 1) {
-                    var startPage = 1;
-                    var endPage = Math.min(totalPages, maxPagesToShow);
-
-                    for (var i = startPage; i <= endPage; i++) {
-                        var button = $('<button>')
-                            .text(i)
-                            .addClass('pagination-button')
-                            .data('page', i)
-                            .click(function() {
-                                currentPage = $(this).data('page');
-                                startIndex = (currentPage - 1) * maxResults;
-                                searchBooks($('#search-query').val(), startIndex);
-                            });
-                        if (i === currentPage) {
-                            button.addClass('active');
-                        }
+                    for (var i = 0; i < totalPages; i++) {
+                        var button = $('<button></button>').attr('data-page', i).text((i + 1));
                         $('#pagination').append(button);
                     }
 
-                    if (totalPages > maxPagesToShow) {
-                        $('#pagination').append('<span>...</span>');
-                        var lastButton = $('<button>')
-                            .text(totalPages)
-                            .addClass('pagination-button')
-                            .data('page', totalPages)
-                            .click(function() {
-                                currentPage = $(this).data('page');
-                                startIndex = (currentPage - 1) * maxResults;
-                                searchBooks($('#search-query').val(), startIndex);
-                            });
-                        $('#pagination').append(lastButton);
-                    }
+                    $('#pagination button').click(function() {
+                        startIndex = $(this).attr('data-page') * maxResults;
+                        searchBooks($('#search-query').val(), startIndex);
+                    });
                 }
             }
 
