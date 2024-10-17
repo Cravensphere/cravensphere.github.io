@@ -18,11 +18,7 @@
         <div id="pagination"></div>
         <div id="book-details"></div>
         <h2>My Bookshelf</h2>
-        <div id="bookshelf-container">
-            <input type="text" id="user-id" placeholder="Enter your user ID">
-            <button id="fetch-bookshelf">Fetch Bookshelf</button>
-            <div id="bookshelf" class="grid-container"></div>
-        </div>
+        <div id="bookshelf" class="grid-container"></div>
     </main>
     <script>
         $(document).ready(function() {
@@ -269,19 +265,9 @@
                 fetchBookshelf(); // Ensure bookshelf is updated as well
             });
 
-            $('#fetch-bookshelf').click(function() {
-                var userId = $('#user-id').val();
-                if (userId) {
-                    fetchBookshelf(userId);
-                } else {
-                    $('#bookshelf').empty();
-                    $('#bookshelf').append('<p>Please enter a user ID</p>');
-                }
-            });
-
-            function fetchBookshelf(userId) {
+            function fetchBookshelf() {
                 $.ajax({
-                    url: 'https://www.googleapis.com/books/v1/users/' + userId + '/bookshelves/1001/volumes',
+                    url: 'https://www.googleapis.com/books/v1/users/111136193298674250069/bookshelves/1001/volumes',
                     method: 'GET',
                     success: function(response) {
                         if (response.items) {
@@ -297,6 +283,8 @@
                     }
                 });
             }
+
+            fetchBookshelf();
         });
     </script>
 </body>
