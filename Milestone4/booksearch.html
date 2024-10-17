@@ -177,7 +177,26 @@
                 $('#pagination').empty();
                 var totalPages = Math.ceil(totalResults / maxResults);
                 if (totalPages > 1) {
-                    for (var i = 1; i <= totalPages; i++) {
+                    var startPage = Math.max(1, currentPage - 2);
+                    var endPage = Math.min(totalPages, currentPage + 2);
+
+                    if (startPage > 1) {
+                        var firstButton = $('<button>')
+                            .text(1)
+                            .addClass('pagination-button')
+                            .data('page', 1)
+                            .click(function() {
+                                currentPage = $(this).data('page');
+                                startIndex = (currentPage - 1) * maxResults;
+                                searchBooks($('#search-query').val(), startIndex);
+                            });
+                        $('#pagination').append(firstButton);
+                        if (startPage > 2) {
+                            $('#pagination').append('<span>...</span>');
+                        }
+                    }
+
+                    for (var i = startPage; i <= endPage; i++) {
                         var button = $('<button>')
                             .text(i)
                             .addClass('pagination-button')
@@ -191,6 +210,22 @@
                             button.addClass('active');
                         }
                         $('#pagination').append(button);
+                    }
+
+                    if (endPage < totalPages) {
+                        if (endPage < totalPages - 1) {
+                            $('#pagination').append('<span>...</span>');
+                        }
+                        var lastButton = $('<button>')
+                            .text(totalPages)
+                            .addClass('pagination-button')
+                            .data('page', totalPages)
+                            .click(function() {
+                                currentPage = $(this).data('page');
+                                startIndex = (currentPage - 1) * maxResults;
+                                searchBooks($('#search-query').val(), startIndex);
+                            });
+                        $('#pagination').append(lastButton);
                     }
                 }
             }
