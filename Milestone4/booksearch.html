@@ -41,6 +41,15 @@
                 </div>
             `;
 
+            var listBookTemplate = `
+                <div class="book-item list-item">
+                    <div class="book-info">
+                        <h2><a href="#" class="book-title" data-id="{{id}}">{{title}}</a></h2>
+                        <p><strong>Authors:</strong> {{authors}}</p>
+                    </div>
+                </div>
+            `;
+
             function appendBookResults(items) {
                 items.forEach(function(item) {
                     var data = {
@@ -49,7 +58,8 @@
                         authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author',
                         thumbnail: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image'
                     };
-                    var rendered = Mustache.render(bookTemplate, data);
+                    var template = isGridLayout ? bookTemplate : listBookTemplate;
+                    var rendered = Mustache.render(template, data);
                     $('#results').append(rendered);
                 });
 
@@ -149,6 +159,17 @@
                     $('#results').removeClass('grid-container').addClass('list-container');
                     $('#bookshelf').removeClass('grid-container').addClass('list-container');
                 }
+                // Re-render the current results to apply the new layout
+                var currentResults = $('#results').children().map(function() {
+                    return {
+                        id: $(this).find('.book-title').data('id'),
+                        title: $(this).find('.book-title').text(),
+                        authors: $(this).find('p').text().replace('Authors: ', ''),
+                        thumbnail: $(this).find('img').attr('src')
+                    };
+                }).get();
+                $('#results').empty();
+                appendBookResults(currentResults);
             });
 
             function fetchBookshelf() {
@@ -165,7 +186,8 @@
                                     authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author',
                                     thumbnail: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image'
                                 };
-                                var rendered = Mustache.render(bookTemplate, data);
+                                var template = isGridLayout ? bookTemplate : listBookTemplate;
+                                var rendered = Mustache.render(template, data);
                                 $('#bookshelf').append(rendered);
                             });
 
