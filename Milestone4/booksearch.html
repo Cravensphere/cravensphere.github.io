@@ -28,7 +28,8 @@
         $(document).ready(function() {
             var startIndex = 0;
             var maxResults = 10;
-            var totalResultsLimit = 50;
+            var totalResults = 0;
+            var currentPage = 1;
             var isGridLayout = true;
             var currentResults = [];
 
@@ -135,22 +136,26 @@
                 });
             }
 
-            function searchBooks(query) {
+            function searchBooks(query, startIndex) {
                 $.ajax({
-                    url: 'https://www.googleapis.com/books/v1/volumes?q=' + query + '&maxResults=' + maxResults,
+                    url: 'https://www.googleapis.com/books/v1/volumes?q=' + query + '&startIndex=' + startIndex + '&maxResults=' + maxResults,
                     method: 'GET',
                     success: function(response) {
                         if (response.items) {
                             currentResults = response.items;
+                            totalResults = response.totalItems;
                             appendBookResults(currentResults);
+                            updatePagination();
                         } else {
                             $('#results').empty();
                             $('#results').append('<p>No results found</p>');
+                            $('#pagination').empty();
                         }
                     },
                     error: function() {
                         $('#results').empty();
                         $('#results').append('<p>An error occurred while fetching the results</p>');
+                        $('#pagination').empty();
                     }
                 });
             }
@@ -158,10 +163,35 @@
             function triggerSearch() {
                 var query = $('#search-query').val();
                 if (query) {
-                    searchBooks(query);
+                    startIndex = 0;
+                    currentPage = 1;
+                    searchBooks(query, startIndex);
                 } else {
                     $('#results').empty();
                     $('#results').append('<p>Please enter a search query</p>');
+                    $('#pagination').empty();
+                }
+            }
+
+            function updatePagination() {
+                $('#pagination').empty();
+                var totalPages = Math.ceil(totalResults / maxResults);
+                if (totalPages > 1) {
+                    for (var i = 1; i <= totalPages; i++) {
+                        var button = $('<button>')
+                            .text(i)
+                            .addClass('pagination-button')
+                            .data('page', i)
+                            .click(function() {
+                                currentPage = $(this).data('page');
+                                startIndex = (currentPage - 1) * maxResults;
+                                searchBooks($('#search-query').val(), startIndex);
+                            });
+                        if (i === currentPage) {
+                            button.addClass('active');
+                        }
+                        $('#pagination').append(button);
+                    }
                 }
             }
 
