@@ -175,7 +175,7 @@
 
             function updatePagination() {
                 $('#pagination').empty();
-                var totalPages = Math.ceil(totalItems / maxResults);
+                var totalPages = Math.ceil(totalResults / maxResults);
                 var maxPagesToShow = 5;
 
                 if (totalPages > 1) {
