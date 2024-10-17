@@ -13,7 +13,7 @@
             var maxResults = 10;
             var totalResultsLimit = 50;
 
-            var template = `
+            var bookTemplate = `
                 <div class="book-item">
                     <img src="{{thumbnail}}" alt="Book cover" class="book-cover">
                     <div class="book-info">
@@ -21,6 +21,12 @@
                         <p><strong>Authors:</strong> {{authors}}</p>
                     </div>
                 </div>
+            `;
+
+            var paginationTemplate = `
+                {{#pages}}
+                    <button data-page="{{page}}" class="pagination-button">{{page}}</button>
+                {{/pages}}
             `;
 
             function appendBookResults(items) {
@@ -31,7 +37,7 @@
                         authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author',
                         thumbnail: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image'
                     };
-                    var rendered = Mustache.render(template, data);
+                    var rendered = Mustache.render(bookTemplate, data);
                     $('#results').append(rendered);
                 });
 
@@ -47,13 +53,16 @@
                 $('#pagination').empty();
                 var totalPages = Math.ceil(totalItems / maxResults);
                 if (totalPages > 1) {
-                    for (var i = 0; i < totalPages; i++) {
-                        var button = $('<button></button>').attr('data-page', i).text((i + 1));
-                        $('#pagination').append(button);
+                    var pages = [];
+                    for (var i = 1; i <= totalPages; i++) {
+                        pages.push({ page: i });
                     }
+                    var rendered = Mustache.render(paginationTemplate, { pages: pages });
+                    $('#pagination').append(rendered);
 
-                    $('#pagination button').click(function() {
-                        startIndex = $(this).attr('data-page') * maxResults;
+                    // Add click event for pagination buttons
+                    $('.pagination-button').click(function() {
+                        startIndex = ($(this).data('page') - 1) * maxResults;
                         searchBooks($('#search-query').val(), startIndex);
                     });
                 }
@@ -141,25 +150,22 @@
             });
 
             function fetchBookshelf() {
+                console.log("Fetching bookshelf..."); // Debugging line
                 $.ajax({
                     url: 'https://www.googleapis.com/books/v1/users/111136193298674250069/bookshelves/1001/volumes',
                     method: 'GET',
                     success: function(response) {
+                        console.log("Bookshelf response:", response); // Debugging line
                         $('#bookshelf').empty();
                         if (response.items) {
                             response.items.forEach(function(item) {
-                                var id = item.id;
-                                var title = item.volumeInfo.title;
-                                var authors = item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author';
-                                var thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image';
-
                                 var data = {
-                                    id: id,
-                                    title: title,
-                                    authors: authors,
-                                    thumbnail: thumbnail
+                                    id: item.id,
+                                    title: item.volumeInfo.title,
+                                    authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'Unknown Author',
+                                    thumbnail: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'https://via.placeholder.com/128x192?text=No+Image'
                                 };
-                                var rendered = Mustache.render(template, data);
+                                var rendered = Mustache.render(bookTemplate, data);
                                 $('#bookshelf').append(rendered);
                             });
 
@@ -174,6 +180,7 @@
                         }
                     },
                     error: function() {
+                        console.error("Error fetching bookshelf"); // Debugging line
                         $('#bookshelf').empty();
                         $('#bookshelf').append('<p>An error occurred while fetching the bookshelf</p>');
                     }
