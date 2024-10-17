@@ -176,13 +176,34 @@
             function updatePagination() {
                 $('#pagination').empty();
                 var totalPages = Math.ceil(totalItems / maxResults);
+                var maxPagesToShow = 5;
+
                 if (totalPages > 1) {
-                    for (var i = 0; i < totalPages; i++) {
-                        var button = $('<button></button>').attr('data-page', i).text((i + 1));
+                    var startPage = 1;
+                    var endPage = Math.min(totalPages, maxPagesToShow);
+
+                    for (var i = startPage; i <= endPage; i++) {
+                        var button = $('<button></button>')
+                            .attr('data-page', i - 1)
+                            .text(i)
+                            .addClass('pagination-button');
+                        if (i === currentPage) {
+                            button.addClass('active');
+                        }
                         $('#pagination').append(button);
                     }
 
+                    if (totalPages > maxPagesToShow) {
+                        $('#pagination').append('<span>...</span>');
+                        var lastButton = $('<button></button>')
+                            .attr('data-page', totalPages - 1)
+                            .text(totalPages)
+                            .addClass('pagination-button');
+                        $('#pagination').append(lastButton);
+                    }
+
                     $('#pagination button').click(function() {
+                        currentPage = parseInt($(this).attr('data-page')) + 1;
                         startIndex = $(this).attr('data-page') * maxResults;
                         searchBooks($('#search-query').val(), startIndex);
                     });
