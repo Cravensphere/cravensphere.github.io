@@ -59,6 +59,13 @@
                 fetchMovies(query, currentPage);
             });
 
+            $('#search-query').keypress(function(event) {
+                if (event.which === 13) {
+                    var query = $('#search-query').val();
+                    fetchMovies(query, currentPage);
+                }
+            });
+
             $('#toggle-layout').click(function() {
                 isGridLayout = !isGridLayout;
                 $('#results').toggleClass('grid-container list-container');
@@ -68,6 +75,7 @@
     <script id="movie-template" type="x-tmpl-mustache">
         {{#movies}}
         <div class="movie">
+            <img src="https://image.tmdb.org/t/p/w200{{poster_path}}" alt="{{title}} poster">
             <h3>{{title}}</h3>
             <p>{{release_date}}</p>
             <p>{{overview}}</p>
