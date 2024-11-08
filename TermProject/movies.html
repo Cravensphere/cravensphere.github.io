@@ -52,6 +52,35 @@
                 var template = $('#movie-template').html();
                 var rendered = Mustache.render(template, { movies: currentResults });
                 $('#results').html(rendered);
+                $('.movie-title').click(function() {
+                    var movieId = $(this).data('id');
+                    fetchMovieDetails(movieId);
+                });
+            }
+
+            function fetchMovieDetails(movieId) {
+                $.ajax({
+                    url: `https://api.themoviedb.org/3/movie/${movieId}?api_key=56e665fbc9c321fad4cfb7957c12244b`,
+                    method: 'GET',
+                    success: function(data) {
+                        renderMovieDetails(data);
+                    },
+                    error: function(error) {
+                        console.error('Error fetching movie details:', error);
+                    }
+                });
+            }
+
+            function renderMovieDetails(movie) {
+                var detailsHtml = `
+                    <h2>${movie.title}</h2>
+                    <img src="https://image.tmdb.org/t/p/w200${movie.poster_path}" alt="${movie.title} poster">
+                    <p><strong>Release Date:</strong> ${movie.release_date}</p>
+                    <p><strong>Overview:</strong> ${movie.overview}</p>
+                    <p><strong>Genres:</strong> ${movie.genres.map(genre => genre.name).join(', ')}</p>
+                    <p><strong>Rating:</strong> ${movie.vote_average}</p>
+                `;
+                $('#movie-details').html(detailsHtml);
             }
 
             $('#search-button').click(function() {
@@ -76,7 +105,7 @@
         {{#movies}}
         <div class="movie">
             <img src="https://image.tmdb.org/t/p/w200{{poster_path}}" alt="{{title}} poster">
-            <h3>{{title}}</h3>
+            <h3><a href="#" class="movie-title" data-id="{{id}}">{{title}}</a></h3>
             <p>{{release_date}}</p>
             <p>{{overview}}</p>
         </div>
