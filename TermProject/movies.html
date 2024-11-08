@@ -75,6 +75,10 @@
                 var template = $('#collection-template').html();
                 var rendered = Mustache.render(template, { items: items });
                 $('#collection').html(rendered);
+                $('.item-title').click(function() {
+                    var itemId = $(this).data('id');
+                    fetchMovieDetails(itemId);
+                });
             }
 
             function fetchMovieDetails(movieId) {
@@ -137,7 +141,7 @@
         {{#items}}
         <div class="item">
             <img src="https://image.tmdb.org/t/p/w200{{poster_path}}" alt="{{title}} poster">
-            <h3>{{title}}</h3>
+            <h3><a href="#" class="item-title" data-id="{{id}}">{{title}}</a></h3>
             <p>{{release_date}}</p>
         </div>
         {{/items}}
