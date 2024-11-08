@@ -21,7 +21,7 @@
         <div id="results" class="grid-container"></div>
         <div id="pagination"></div>
         <div id="movie-details"></div>
-        <h2>My Movie Collection</h2>
+        <h2>Popular Movies and TV Shows</h2>
         <div id="collection" class="grid-container"></div>
     </main>
     <script>
@@ -48,6 +48,19 @@
                 });
             }
 
+            function fetchPopularMoviesAndShows() {
+                $.ajax({
+                    url: `https://api.themoviedb.org/3/trending/all/week?api_key=56e665fbc9c321fad4cfb7957c12244b`,
+                    method: 'GET',
+                    success: function(data) {
+                        renderCollection(data.results);
+                    },
+                    error: function(error) {
+                        console.error('Error fetching popular movies and shows:', error);
+                    }
+                });
+            }
+
             function renderResults() {
                 var template = $('#movie-template').html();
                 var rendered = Mustache.render(template, { movies: currentResults });
@@ -56,6 +69,12 @@
                     var movieId = $(this).data('id');
                     fetchMovieDetails(movieId);
                 });
+            }
+
+            function renderCollection(items) {
+                var template = $('#collection-template').html();
+                var rendered = Mustache.render(template, { items: items });
+                $('#collection').html(rendered);
             }
 
             function fetchMovieDetails(movieId) {
@@ -99,6 +118,9 @@
                 isGridLayout = !isGridLayout;
                 $('#results').toggleClass('grid-container list-container');
             });
+
+            // Fetch popular movies and shows on page load
+            fetchPopularMoviesAndShows();
         });
     </script>
     <script id="movie-template" type="x-tmpl-mustache">
@@ -110,6 +132,15 @@
             <p>{{overview}}</p>
         </div>
         {{/movies}}
+    </script>
+    <script id="collection-template" type="x-tmpl-mustache">
+        {{#items}}
+        <div class="item">
+            <img src="https://image.tmdb.org/t/p/w200{{poster_path}}" alt="{{title}} poster">
+            <h3>{{title}}</h3>
+            <p>{{release_date}}</p>
+        </div>
+        {{/items}}
     </script>
 </body>
 </html>
