@@ -26,19 +26,19 @@
     </main>
     <script>
         $(document).ready(function() {
-            var startIndex = 0;
+            var startIndex = 1;
             var maxResults = 10;
             var totalResults = 0;
             var currentPage = 1;
             var isGridLayout = true;
             var currentResults = [];
 
-            function fetchMovies(query, startIndex) {
+            function fetchMovies(query, page) {
                 $.ajax({
-                    url: `https://api.example.com/movies?api_key=56e665fbc9c321fad4cfb7957c12244b&query=${query}&startIndex=${startIndex}&maxResults=${maxResults}`,
+                    url: `https://api.themoviedb.org/3/search/movie?api_key=56e665fbc9c321fad4cfb7957c12244b&query=${query}&page=${page}`,
                     method: 'GET',
                     success: function(data) {
-                        totalResults = data.totalResults;
+                        totalResults = data.total_results;
                         currentResults = data.results;
                         renderResults();
                     },
@@ -56,7 +56,7 @@
 
             $('#search-button').click(function() {
                 var query = $('#search-query').val();
-                fetchMovies(query, startIndex);
+                fetchMovies(query, currentPage);
             });
 
             $('#toggle-layout').click(function() {
@@ -69,8 +69,8 @@
         {{#movies}}
         <div class="movie">
             <h3>{{title}}</h3>
-            <p>{{director}}</p>
-            <p>{{releaseDate}}</p>
+            <p>{{release_date}}</p>
+            <p>{{overview}}</p>
         </div>
         {{/movies}}
     </script>
