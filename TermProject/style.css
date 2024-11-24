@@ -67,7 +67,7 @@ nav a:hover {
     padding: 20px;
 }
 
-.book-item {
+.movie-item {
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 5px;
@@ -75,31 +75,31 @@ nav a:hover {
     transition: transform 0.2s;
 }
 
-.book-item:hover {
-    transform: none;
+.movie-item:hover {
+    transform: scale(1.05);
 }
 
-.book-cover {
+.movie-cover {
     width: 128px;
     height: 192px;
     margin-bottom: 10px;
 }
 
-.book-info {
+.movie-info {
     text-align: left;
 }
 
-.book-info h2 {
+.movie-info h2 {
     margin: 0;
     font-size: 1.2em;
     color: #007BFF;
 }
 
-.book-info p {
+.movie-info p {
     margin: 5px 0;
 }
 
-.list-item .book-cover {
+.list-item .movie-cover {
     display: none;
 }
 
