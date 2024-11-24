@@ -16,7 +16,6 @@
         <div class="search-container">
             <input type="text" id="search-query" placeholder="Enter movie title or director">
             <button id="search-button">Search</button>
-            <button id="toggle-layout">Toggle Layout</button>
         </div>
         <div id="results" class="grid-container"></div>
         <div id="pagination"></div>
@@ -197,17 +196,7 @@
                 }
             });
 
-            $('#toggle-layout').click(function() {
-                isGridLayout = !isGridLayout;
-                if (isGridLayout) {
-                    $('#results').removeClass('list-container').addClass('grid-container');
-                    $('#collection').removeClass('list-container').addClass('grid-container');
-                } else {
-                    $('#results').removeClass('grid-container').addClass('list-container');
-                    $('#collection').removeClass('grid-container').addClass('list-container');
-                }
-                appendMovieResults(currentResults);
-            });
+            
 
             function fetchCollection() {
                 $.ajax({
