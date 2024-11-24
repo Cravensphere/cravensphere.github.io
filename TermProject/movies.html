@@ -32,6 +32,7 @@
             var currentPage = 1;
             var isGridLayout = true;
             var currentResults = [];
+            var currentCollection = [];
 
             var movieTemplate = `
                 <div class="movie-item">
@@ -54,8 +55,8 @@
                 </div>
             `;
 
-            function appendMovieResults(items) {
-                $('#results').empty();
+            function appendMovieResults(items, container) {
+                container.empty();
                 items.forEach(function(item) {
                     var data = {
                         id: item.id,
@@ -66,11 +67,11 @@
                     };
                     var template = isGridLayout ? movieTemplate : listMovieTemplate;
                     var rendered = Mustache.render(template, data);
-                    $('#results').append(rendered);
+                    container.append(rendered);
                 });
 
                 // Add click event for movie titles
-                $('.movie-title').click(function(event) {
+                container.find('.movie-title').click(function(event) {
                     event.preventDefault();
                     var movieId = $(this).data('id');
                     fetchMovieDetails(movieId);
@@ -121,7 +122,7 @@
                         if (response.results) {
                             currentResults = response.results;
                             totalResults = response.total_results;
-                            appendMovieResults(currentResults);
+                            appendMovieResults(currentResults, $('#results'));
                             updatePagination();
                         } else {
                             $('#results').empty();
@@ -206,7 +207,8 @@
                     $('#results').removeClass('grid-container').addClass('list-container');
                     $('#collection').removeClass('grid-container').addClass('list-container');
                 }
-                appendMovieResults(currentResults);
+                appendMovieResults(currentResults, $('#results'));
+                appendMovieResults(currentCollection, $('#collection'));
             });
 
             function fetchCollection() {
@@ -215,7 +217,8 @@
                     method: 'GET',
                     success: function(response) {
                         if (response.results) {
-                            appendMovieResults(response.results);
+                            currentCollection = response.results;
+                            appendMovieResults(currentCollection, $('#collection'));
                         } else {
                             $('#collection').empty();
                             $('#collection').append('<p>No popular movies or TV shows found</p>');
