@@ -33,159 +33,203 @@
             var isGridLayout = true;
             var currentResults = [];
 
-            function fetchMovies(query, page) {
-                $.ajax({
-                    url: `https://api.themoviedb.org/3/search/movie?api_key=56e665fbc9c321fad4cfb7957c12244b&query=${query}&page=${page}`,
-                    method: 'GET',
-                    success: function(data) {
-                        totalResults = data.total_results;
-                        currentResults = data.results;
-                        renderResults();
-                    },
-                    error: function(error) {
-                        console.error('Error fetching movies:', error);
-                    }
-                });
-            }
+            var movieTemplate = `
+                <div class="movie-item">
+                    <img src="{{thumbnail}}" alt="Movie cover" class="movie-cover">
+                    <div class="movie-info">
+                        <h2><a href="#" class="movie-title" data-id="{{id}}">{{title}}</a></h2>
+                        <p><strong>Director:</strong> {{director}}</p>
+                        <p><strong>Actors:</strong> {{actors}}</p>
+                    </div>
+                </div>
+            `;
 
-            function fetchPopularMoviesAndShows() {
-                $.ajax({
-                    url: `https://api.themoviedb.org/3/trending/all/week?api_key=56e665fbc9c321fad4cfb7957c12244b`,
-                    method: 'GET',
-                    success: function(data) {
-                        renderCollection(data.results);
-                    },
-                    error: function(error) {
-                        console.error('Error fetching popular movies and shows:', error);
-                    }
-                });
-            }
+            var listMovieTemplate = `
+                <div class="movie-item list-item">
+                    <div class="movie-info">
+                        <h2><a href="#" class="movie-title" data-id="{{id}}">{{title}}</a></h2>
+                        <p><strong>Director:</strong> {{director}}</p>
+                        <p><strong>Actors:</strong> {{actors}}</p>
+                    </div>
+                </div>
+            `;
 
-            function renderResults() {
-                var template = $('#movie-template').html();
-                var rendered = Mustache.render(template, { movies: currentResults });
-                $('#results').html(rendered);
-                $('.movie-title').click(function() {
+            function appendMovieResults(items) {
+                $('#results').empty();
+                items.forEach(function(item) {
+                    var data = {
+                        id: item.id,
+                        title: item.title,
+                        director: item.director || 'Unknown Director',
+                        actors: item.actors ? item.actors.slice(0, 3).join(', ') : 'Unknown Actors',
+                        thumbnail: item.thumbnail || 'https://via.placeholder.com/128x192?text=No+Image'
+                    };
+                    var template = isGridLayout ? movieTemplate : listMovieTemplate;
+                    var rendered = Mustache.render(template, data);
+                    $('#results').append(rendered);
+                });
+
+                // Add click event for movie titles
+                $('.movie-title').click(function(event) {
+                    event.preventDefault();
                     var movieId = $(this).data('id');
                     fetchMovieDetails(movieId);
                 });
             }
 
-            function renderCollection(items) {
-                var template = $('#collection-template').html();
-                var rendered = Mustache.render(template, { items: items });
-                $('#collection').html(rendered);
-                $('.item-title').click(function() {
-                    var itemId = $(this).data('id');
-                    fetchMovieDetails(itemId);
-                });
-            }
-
             function fetchMovieDetails(movieId) {
                 $.ajax({
-                    url: `https://api.themoviedb.org/3/movie/${movieId}?api_key=56e665fbc9c321fad4cfb7957c12244b`,
+                    url: 'https://api.example.com/movies/' + movieId,
                     method: 'GET',
-                    success: function(movieData) {
-                        fetchMovieCredits(movieId, movieData);
+                    success: function(response) {
+                        $('#movie-details').empty();
+                        if (response) {
+                            var title = response.title;
+                            var director = response.director || 'Unknown Director';
+                            var actors = response.actors ? response.actors.join(', ') : 'Unknown Actors';
+                            var description = response.description || 'No description available';
+                            var thumbnail = response.thumbnail || 'https://via.placeholder.com/128x192?text=No+Image';
+                            var infoLink = response.infoLink;
+
+                            // Append the data to the movie details section
+                            $('#movie-details').append('<div class="movie-detail">' +
+                                '<img src="' + thumbnail + '" alt="Movie cover" class="movie-cover">' +
+                                '<div class="movie-info">' +
+                                '<h2>' + title + '</h2>' +
+                                '<p><strong>Director:</strong> ' + director + '</p>' +
+                                '<p><strong>Actors:</strong> ' + actors + '</p>' +
+                                '<p><strong>Description:</strong> ' + description + '</p>' +
+                                '<a href="' + infoLink + '" target="_blank">More Info</a>' +
+                                '</div>' +
+                                '</div>');
+                        } else {
+                            $('#movie-details').append('<p>No details found for this movie</p>');
+                        }
                     },
-                    error: function(error) {
-                        console.error('Error fetching movie details:', error);
+                    error: function() {
+                        $('#movie-details').empty();
+                        $('#movie-details').append('<p>An error occurred while fetching the movie details</p>');
                     }
                 });
             }
 
-            function fetchMovieCredits(movieId, movieData) {
+            function searchMovies(query, startIndex) {
                 $.ajax({
-                    url: `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=56e665fbc9c321fad4cfb7957c12244b`,
+                    url: 'https://api.example.com/movies?q=' + query + '&startIndex=' + startIndex + '&maxResults=' + maxResults,
                     method: 'GET',
-                    success: function(creditsData) {
-                        renderMovieDetails(movieData, creditsData.cast);
+                    success: function(response) {
+                        if (response.items) {
+                            currentResults = response.items;
+                            totalResults = response.totalItems;
+                            appendMovieResults(currentResults);
+                            updatePagination();
+                        } else {
+                            $('#results').empty();
+                            $('#results').append('<p>No results found</p>');
+                            $('#pagination').empty();
+                        }
                     },
-                    error: function(error) {
-                        console.error('Error fetching movie credits:', error);
+                    error: function() {
+                        $('#results').empty();
+                        $('#results').append('<p>An error occurred while fetching the results</p>');
+                        $('#pagination').empty();
                     }
                 });
             }
 
-            function renderMovieDetails(movie, cast) {
-                var detailsHtml = `
-                    <h2>${movie.title}</h2>
-                    <img src="https://image.tmdb.org/t/p/w200${movie.poster_path}" alt="${movie.title} poster">
-                    <p><strong>Release Date:</strong> ${movie.release_date}</p>
-                    <p><strong>Overview:</strong> ${movie.overview}</p>
-                    <p><strong>Genres:</strong> ${movie.genres.map(genre => genre.name).join(', ')}</p>
-                    <p><strong>Rating:</strong> ${movie.vote_average}</p>
-                    <p><strong>Actors:</strong> ${cast.slice(0, 5).map(actor => `<a href="#" class="actor-name" data-id="${actor.id}">${actor.name}</a>`).join(', ')}</p>
-                `;
-                $('#movie-details').html(detailsHtml);
-                $('.actor-name').click(function() {
-                    var actorId = $(this).data('id');
-                    fetchActorDetails(actorId);
-                });
+            function triggerSearch() {
+                var query = $('#search-query').val();
+                if (query) {
+                    startIndex = 1;
+                    currentPage = 1;
+                    searchMovies(query, startIndex);
+                } else {
+                    $('#results').empty();
+                    $('#results').append('<p>Please enter a search query</p>');
+                    $('#pagination').empty();
+                }
             }
 
-            function fetchActorDetails(actorId) {
-                $.ajax({
-                    url: `https://api.themoviedb.org/3/person/${actorId}?api_key=56e665fbc9c321fad4cfb7957c12244b`,
-                    method: 'GET',
-                    success: function(actorData) {
-                        renderActorDetails(actorData);
-                    },
-                    error: function(error) {
-                        console.error('Error fetching actor details:', error);
+            function updatePagination() {
+                $('#pagination').empty();
+                var totalPages = Math.ceil(totalResults / maxResults);
+                var maxPagesToShow = 5;
+
+                if (totalPages > 1) {
+                    var startPage = 1;
+                    var endPage = Math.min(totalPages, maxPagesToShow);
+
+                    for (var i = startPage; i <= endPage; i++) {
+                        var button = $('<button></button>')
+                            .attr('data-page', i - 1)
+                            .text(i)
+                            .addClass('pagination-button');
+                        if (i === currentPage) {
+                            button.addClass('active');
+                        }
+                        $('#pagination').append(button);
                     }
-                });
-            }
 
-            function renderActorDetails(actor) {
-                var detailsHtml = `
-                    <h2>${actor.name}</h2>
-                    <img src="https://image.tmdb.org/t/p/w200${actor.profile_path}" alt="${actor.name} photo">
-                    <p><strong>Birthday:</strong> ${actor.birthday}</p>
-                    <p><strong>Biography:</strong> ${actor.biography}</p>
-                `;
-                $('#movie-details').html(detailsHtml);
+                    if (totalPages > maxPagesToShow) {
+                        $('#pagination').append('<span>...</span>');
+                        var lastButton = $('<button></button>')
+                            .attr('data-page', totalPages - 1)
+                            .text(totalPages)
+                            .addClass('pagination-button');
+                        $('#pagination').append(lastButton);
+                    }
+
+                    $('#pagination button').click(function() {
+                        currentPage = parseInt($(this).attr('data-page')) + 1;
+                        startIndex = $(this).attr('data-page') * maxResults;
+                        searchMovies($('#search-query').val(), startIndex);
+                    });
+                }
             }
 
             $('#search-button').click(function() {
-                var query = $('#search-query').val();
-                fetchMovies(query, currentPage);
+                triggerSearch();
             });
 
             $('#search-query').keypress(function(event) {
-                if (event.which === 13) {
-                    var query = $('#search-query').val();
-                    fetchMovies(query, currentPage);
+                if (event.which === 13) { // Enter key pressed
+                    triggerSearch();
                 }
             });
 
             $('#toggle-layout').click(function() {
                 isGridLayout = !isGridLayout;
-                $('#results').toggleClass('grid-container list-container');
+                if (isGridLayout) {
+                    $('#results').removeClass('list-container').addClass('grid-container');
+                    $('#collection').removeClass('list-container').addClass('grid-container');
+                } else {
+                    $('#results').removeClass('grid-container').addClass('list-container');
+                    $('#collection').removeClass('grid-container').addClass('list-container');
+                }
+                appendMovieResults(currentResults);
             });
 
-            // Fetch popular movies and shows on page load
-            fetchPopularMoviesAndShows();
+            function fetchCollection() {
+                $.ajax({
+                    url: 'https://api.example.com/popular',
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.items) {
+                            appendMovieResults(response.items);
+                        } else {
+                            $('#collection').empty();
+                            $('#collection').append('<p>No popular movies or TV shows found</p>');
+                        }
+                    },
+                    error: function() {
+                        $('#collection').empty();
+                        $('#collection').append('<p>An error occurred while fetching the collection</p>');
+                    }
+                });
+            }
+
+            fetchCollection();
         });
-    </script>
-    <script id="movie-template" type="x-tmpl-mustache">
-        {{#movies}}
-        <div class="movie">
-            <img src="https://image.tmdb.org/t/p/w200{{poster_path}}" alt="{{title}} poster">
-            <h3><a href="#" class="movie-title" data-id="{{id}}">{{title}}</a></h3>
-            <p>{{release_date}}</p>
-            <p>{{overview}}</p>
-        </div>
-        {{/movies}}
-    </script>
-    <script id="collection-template" type="x-tmpl-mustache">
-        {{#items}}
-        <div class="item">
-            <img src="https://image.tmdb.org/t/p/w200{{poster_path}}" alt="{{title}} poster">
-            <h3><a href="#" class="item-title" data-id="{{id}}">{{title}}</a></h3>
-            <p>{{release_date}}</p>
-        </div>
-        {{/items}}
     </script>
 </body>
 </html>
