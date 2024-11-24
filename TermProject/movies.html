@@ -62,7 +62,7 @@
                         title: item.title || item.name,
                         director: item.director || 'Unknown Director',
                         actors: item.actors ? item.actors.slice(0, 3).join(', ') : 'Unknown Actors',
-                        thumbnail: item.poster_path || '/128x192?text=No+Image'
+                        thumbnail: item.poster_path ? item.poster_path : '/128x192?text=No+Image'
                     };
                     var template = isGridLayout ? movieTemplate : listMovieTemplate;
                     var rendered = Mustache.render(template, data);
