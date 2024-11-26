@@ -40,8 +40,8 @@
                     <div class="movie-info">
                         <h2><a href="#" class="movie-title" data-id="{{id}}">{{title}}</a></h2>
                         <div class="movie-details" style="display: none;">
-                            <p><strong>Director:</strong> {{director}}</p>
-                            <p><strong>Actors:</strong> {{actors}}</p>
+                            <p><strong>Director:</strong> <a href="#" class="person-link" data-id="{{directorId}}">{{director}}</a></p>
+                            <p><strong>Actors:</strong> {{#actors}}<a href="#" class="person-link" data-id="{{id}}">{{name}}</a>{{^last}}, {{/last}}{{/actors}}</p>
                             <p><strong>Description:</strong> {{description}}</p>
                             <a href="{{infoLink}}" target="_blank">More Info</a>
                         </div>
@@ -54,8 +54,8 @@
                     <div class="movie-info">
                         <h2><a href="#" class="movie-title" data-id="{{id}}">{{title}}</a></h2>
                         <div class="movie-details" style="display: none;">
-                            <p><strong>Director:</strong> {{director}}</p>
-                            <p><strong>Actors:</strong> {{actors}}</p>
+                            <p><strong>Director:</strong> <a href="#" class="person-link" data-id="{{directorId}}">{{director}}</a></p>
+                            <p><strong>Actors:</strong> {{#actors}}<a href="#" class="person-link" data-id="{{id}}">{{name}}</a>{{^last}}, {{/last}}{{/actors}}</p>
                             <p><strong>Description:</strong> {{description}}</p>
                             <a href="{{infoLink}}" target="_blank">More Info</a>
                         </div>
@@ -79,7 +79,12 @@
                         method: 'GET',
                         success: function(response) {
                             data.director = response.credits.crew.find(member => member.job === 'Director')?.name || 'Unknown Director';
-                            data.actors = response.credits.cast.slice(0, 3).map(actor => actor.name).join(', ') || 'Unknown Actors';
+                            data.directorId = response.credits.crew.find(member => member.job === 'Director')?.id || '';
+                            data.actors = response.credits.cast.slice(0, 3).map((actor, index, array) => ({
+                                id: actor.id,
+                                name: actor.name,
+                                last: index === array.length - 1
+                            })) || [{ name: 'Unknown Actors', id: '' }];
                             var template = isGridLayout ? movieTemplate : listMovieTemplate;
                             var rendered = Mustache.render(template, data);
                             container.append(rendered);
@@ -88,11 +93,19 @@
                             container.find('.movie-title').off('click').on('click', function(event) {
                                 event.preventDefault();
                                 $(this).closest('.movie-info').find('.movie-details').toggle();
+                            });
+
+                            // Add click event for person links to fetch more info
+                            container.find('.person-link').off('click').on('click', function(event) {
+                                event.preventDefault();
+                                var personId = $(this).data('id');
+                                fetchPersonDetails(personId);
                             });
                         },
                         error: function() {
                             data.director = 'Unknown Director';
-                            data.actors = 'Unknown Actors';
+                            data.directorId = '';
+                            data.actors = [{ name: 'Unknown Actors', id: '' }];
                             var template = isGridLayout ? movieTemplate : listMovieTemplate;
                             var rendered = Mustache.render(template, data);
                             container.append(rendered);
@@ -102,8 +115,49 @@
                                 event.preventDefault();
                                 $(this).closest('.movie-info').find('.movie-details').toggle();
                             });
+
+                            // Add click event for person links to fetch more info
+                            container.find('.person-link').off('click').on('click', function(event) {
+                                event.preventDefault();
+                                var personId = $(this).data('id');
+                                fetchPersonDetails(personId);
+                            });
                         }
                     });
+                });
+            }
+
+            function fetchPersonDetails(personId) {
+                $.ajax({
+                    url: 'https://api.themoviedb.org/3/person/' + personId + '?api_key=56e665fbc9c321fad4cfb7957c12244b',
+                    method: 'GET',
+                    success: function(response) {
+                        $('#movie-details').empty();
+                        if (response) {
+                            var name = response.name;
+                            var biography = response.biography || 'No biography available';
+                            var birthday = response.birthday || 'Unknown';
+                            var placeOfBirth = response.place_of_birth || 'Unknown';
+                            var profilePath = response.profile_path ? 'https://image.tmdb.org/t/p/w500' + response.profile_path : 'https://via.placeholder.com/128x192?text=No+Image';
+
+                            // Append the data to the movie details section
+                            $('#movie-details').append('<div class="person-detail">' +
+                                '<img src="' + profilePath + '" alt="Profile picture" class="profile-picture">' +
+                                '<div class="person-info">' +
+                                '<h2>' + name + '</h2>' +
+                                '<p><strong>Biography:</strong> ' + biography + '</p>' +
+                                '<p><strong>Birthday:</strong> ' + birthday + '</p>' +
+                                '<p><strong>Place of Birth:</strong> ' + placeOfBirth + '</p>' +
+                                '</div>' +
+                                '</div>');
+                        } else {
+                            $('#movie-details').append('<p>No details found for this person</p>');
+                        }
+                    },
+                    error: function() {
+                        $('#movie-details').empty();
+                        $('#movie-details').append('<p>An error occurred while fetching the person details</p>');
+                    }
                 });
             }
 
