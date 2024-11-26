@@ -83,7 +83,7 @@
                 // Add click event for movie titles to toggle details
                 container.find('.movie-title').click(function(event) {
                     event.preventDefault();
-                    $(this).siblings('.movie-details').toggle();
+                    $(this).closest('.movie-info').find('.movie-details').toggle();
                 });
             }
 
