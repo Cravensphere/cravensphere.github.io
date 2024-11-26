@@ -240,7 +240,7 @@
                 fetchAllResults(query).then(function() {
                     currentResults = allResults;
                     totalResults = allResults.length;
-                    appendMovieResults(currentResults, $('#results'));
+                    appendMovieResults(currentResults.slice(0, maxResults), $('#results'));
                     updatePagination();
                 });
             }
