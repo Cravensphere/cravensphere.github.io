@@ -17,6 +17,11 @@
             <input type="text" id="search-query" placeholder="Enter movie title or director">
             <button id="search-button">Search</button>
             <button id="toggle-layout">Toggle Layout</button>
+            <select id="sort-options">
+                <option value="releaseDate">Sort by Release Date</option>
+                <option value="score">Sort by Score</option>
+                <option value="alphabetical">Sort Alphabetically</option>
+            </select>
         </div>
         <div id="results" class="grid-container"></div>
         <div id="pagination"></div>
@@ -33,6 +38,7 @@
             var isGridLayout = true;
             var currentResults = [];
             var currentCollection = [];
+            var sortOption = 'releaseDate';
 
             var movieTemplate = `
                 <div class="movie-item">
@@ -67,8 +73,19 @@
                 </div>
             `;
 
+            function sortItems(items) {
+                if (sortOption === 'releaseDate') {
+                    items.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+                } else if (sortOption === 'score') {
+                    items.sort((a, b) => b.vote_average - a.vote_average);
+                } else if (sortOption === 'alphabetical') {
+                    items.sort((a, b) => a.title.localeCompare(b.title));
+                }
+            }
+
             function appendMovieResults(items, container) {
                 container.empty();
+                sortItems(items);
                 items.forEach(function(item) {
                     var data = {
                         id: item.id,
@@ -296,6 +313,12 @@
                     $('#results').removeClass('grid-container').addClass('list-container');
                     $('#collection').removeClass('grid-container').addClass('list-container');
                 }
+                appendMovieResults(currentResults, $('#results'));
+                appendMovieResults(currentCollection, $('#collection'));
+            });
+
+            $('#sort-options').change(function() {
+                sortOption = $(this).val();
                 appendMovieResults(currentResults, $('#results'));
                 appendMovieResults(currentCollection, $('#collection'));
             });
