@@ -65,7 +65,7 @@
 
             function appendMovieResults(items, container) {
                 container.empty();
-                items.forEach(function(item) {
+                var promises = items.map(function(item) {
                     var data = {
                         id: item.id,
                         title: item.title || item.name,
@@ -74,36 +74,29 @@
                         infoLink: 'https://www.themoviedb.org/movie/' + item.id
                     };
 
-                    // Fetch additional details (director and actors)
-                    $.ajax({
+                    return $.ajax({
                         url: 'https://api.themoviedb.org/3/movie/' + item.id + '?api_key=56e665fbc9c321fad4cfb7957c12244b&append_to_response=credits',
                         method: 'GET',
                         success: function(response) {
                             data.director = response.credits.crew.find(member => member.job === 'Director')?.name || 'Unknown Director';
                             data.actors = response.credits.cast.slice(0, 3).map(actor => actor.name).join(', ') || 'Unknown Actors';
-                            var template = isGridLayout ? movieTemplate : listMovieTemplate;
-                            var rendered = Mustache.render(template, data);
-                            container.append(rendered);
-
-                            // Add click event for movie titles to toggle details
-                            container.find('.movie-title').click(function(event) {
-                                event.preventDefault();
-                                $(this).closest('.movie-info').find('.movie-details').toggle();
-                            });
                         },
                         error: function() {
                             data.director = 'Unknown Director';
                             data.actors = 'Unknown Actors';
-                            var template = isGridLayout ? movieTemplate : listMovieTemplate;
-                            var rendered = Mustache.render(template, data);
-                            container.append(rendered);
-
-                            // Add click event for movie titles to toggle details
-                            container.find('.movie-title').click(function(event) {
-                                event.preventDefault();
-                                $(this).closest('.movie-info').find('.movie-details').toggle();
-                            });
                         }
+                    }).then(function() {
+                        var template = isGridLayout ? movieTemplate : listMovieTemplate;
+                        var rendered = Mustache.render(template, data);
+                        container.append(rendered);
+                    });
+                });
+
+                $.when.apply($, promises).done(function() {
+                    // Add click event for movie titles to toggle details
+                    container.find('.movie-title').off('click').on('click', function(event) {
+                        event.preventDefault();
+                        $(this).closest('.movie-info').find('.movie-details').toggle();
                     });
                 });
             }
@@ -212,7 +205,7 @@
 
                     $('#pagination button').click(function() {
                         currentPage = parseInt($(this).attr('data-page'));
-                        startIndex = (currentPage - 1) * itemsPerPage; // Correctly calculate startIndex
+                        startIndex = currentPage;
                         searchMovies($('#search-query').val(), startIndex);
                     });
                 }
