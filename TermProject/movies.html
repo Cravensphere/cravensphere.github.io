@@ -86,7 +86,6 @@
 
             function appendMovieResults(items, container) {
                 container.empty();
-                sortItems(items);
                 items.forEach(function(item) {
                     var data = {
                         id: item.id,
@@ -240,6 +239,7 @@
                 fetchAllResults(query).then(function() {
                     currentResults = allResults;
                     totalResults = allResults.length;
+                    sortItems(currentResults);
                     appendMovieResults(currentResults.slice(0, maxResults), $('#results'));
                     updatePagination();
                 });
@@ -320,6 +320,7 @@
 
             $('#sort-options').change(function() {
                 sortOption = $(this).val();
+                sortItems(currentResults);
                 appendMovieResults(currentResults.slice((currentPage - 1) * maxResults, currentPage * maxResults), $('#results'));
                 appendMovieResults(currentCollection, $('#collection'));
             });
