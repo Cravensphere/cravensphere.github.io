@@ -69,21 +69,42 @@
                     var data = {
                         id: item.id,
                         title: item.title || item.name,
-                        director: item.director || 'Unknown Director',
-                        actors: item.actors ? item.actors.slice(0, 3).join(', ') : 'Unknown Actors',
                         description: item.overview || 'No description available',
                         thumbnail: item.poster_path ? item.poster_path : '/128x192?text=No+Image',
                         infoLink: 'https://www.themoviedb.org/movie/' + item.id
                     };
-                    var template = isGridLayout ? movieTemplate : listMovieTemplate;
-                    var rendered = Mustache.render(template, data);
-                    container.append(rendered);
-                });
 
-                // Add click event for movie titles to toggle details
-                container.find('.movie-title').click(function(event) {
-                    event.preventDefault();
-                    $(this).closest('.movie-info').find('.movie-details').toggle();
+                    // Fetch additional details (director and actors)
+                    $.ajax({
+                        url: 'https://api.themoviedb.org/3/movie/' + item.id + '?api_key=56e665fbc9c321fad4cfb7957c12244b&append_to_response=credits',
+                        method: 'GET',
+                        success: function(response) {
+                            data.director = response.credits.crew.find(member => member.job === 'Director')?.name || 'Unknown Director';
+                            data.actors = response.credits.cast.slice(0, 3).map(actor => actor.name).join(', ') || 'Unknown Actors';
+                            var template = isGridLayout ? movieTemplate : listMovieTemplate;
+                            var rendered = Mustache.render(template, data);
+                            container.append(rendered);
+
+                            // Add click event for movie titles to toggle details
+                            container.find('.movie-title').click(function(event) {
+                                event.preventDefault();
+                                $(this).closest('.movie-info').find('.movie-details').toggle();
+                            });
+                        },
+                        error: function() {
+                            data.director = 'Unknown Director';
+                            data.actors = 'Unknown Actors';
+                            var template = isGridLayout ? movieTemplate : listMovieTemplate;
+                            var rendered = Mustache.render(template, data);
+                            container.append(rendered);
+
+                            // Add click event for movie titles to toggle details
+                            container.find('.movie-title').click(function(event) {
+                                event.preventDefault();
+                                $(this).closest('.movie-info').find('.movie-details').toggle();
+                            });
+                        }
+                    });
                 });
             }
 
