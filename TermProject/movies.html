@@ -240,8 +240,37 @@
                     method: 'GET',
                     success: function(response) {
                         if (response.results) {
-                            currentCollection = response.results;
-                            appendMovieResults(currentCollection, $('#collection'));
+                            var promises = response.results.map(function(item) {
+                                var data = {
+                                    id: item.id,
+                                    title: item.title || item.name,
+                                    description: item.overview || 'No description available',
+                                    thumbnail: item.poster_path ? item.poster_path : '/128x192?text=No+Image',
+                                    infoLink: 'https://www.themoviedb.org/movie/' + item.id
+                                };
+
+                                return $.ajax({
+                                    url: 'https://api.themoviedb.org/3/movie/' + item.id + '?api_key=56e665fbc9c321fad4cfb7957c12244b&append_to_response=credits',
+                                    method: 'GET'
+                                }).then(function(movieData) {
+                                    if (movieData.credits) {
+                                        var director = movieData.credits.crew.find(person => person.job === 'Director');
+                                        data.director = director ? director.name : 'Not available';
+                                        data.actors = movieData.credits.cast
+                                            .slice(0, 3)
+                                            .map(actor => actor.name)
+                                            .join(', ');
+                                    }
+                                    return data;
+                                }).catch(function() {
+                                    return data;
+                                });
+                            });
+
+                            Promise.all(promises).then(function(moviesData) {
+                                currentCollection = moviesData;
+                                appendMovieResults(currentCollection, $('#collection'));
+                            });
                         } else {
                             $('#collection').empty();
                             $('#collection').append('<p>No popular movies or TV shows found</p>');
