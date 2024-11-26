@@ -205,7 +205,7 @@
 
                     $('#pagination button').click(function() {
                         currentPage = parseInt($(this).attr('data-page'));
-                        startIndex = currentPage;
+                        startIndex = (currentPage - 1) * itemsPerPage; // Correctly calculate startIndex
                         searchMovies($('#search-query').val(), startIndex);
                     });
                 }
