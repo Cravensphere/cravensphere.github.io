@@ -39,6 +39,8 @@
                     <img src="https://image.tmdb.org/t/p/w500{{thumbnail}}" alt="Movie cover" class="movie-cover">
                     <div class="movie-info">
                         <h2><a href="#" class="movie-title" data-id="{{id}}">{{title}}</a></h2>
+                        <p><strong>Release Date:</strong> {{releaseDate}}</p>
+                        <p><strong>Score:</strong> {{score}}</p>
                         <div class="movie-details" style="display: none;">
                             <p><strong>Director:</strong> <a href="#" class="person-link" data-id="{{directorId}}">{{director}}</a></p>
                             <p><strong>Actors:</strong> {{#actors}}<a href="#" class="person-link" data-id="{{id}}">{{name}}</a>{{^last}}, {{/last}}{{/actors}}</p>
@@ -53,6 +55,8 @@
                 <div class="movie-item list-item">
                     <div class="movie-info">
                         <h2><a href="#" class="movie-title" data-id="{{id}}">{{title}}</a></h2>
+                        <p><strong>Release Date:</strong> {{releaseDate}}</p>
+                        <p><strong>Score:</strong> {{score}}</p>
                         <div class="movie-details" style="display: none;">
                             <p><strong>Director:</strong> <a href="#" class="person-link" data-id="{{directorId}}">{{director}}</a></p>
                             <p><strong>Actors:</strong> {{#actors}}<a href="#" class="person-link" data-id="{{id}}">{{name}}</a>{{^last}}, {{/last}}{{/actors}}</p>
@@ -69,6 +73,8 @@
                     var data = {
                         id: item.id,
                         title: item.title || item.name,
+                        releaseDate: item.release_date || 'Unknown',
+                        score: item.vote_average || 'N/A',
                         description: item.overview || 'No description available',
                         thumbnail: item.poster_path ? item.poster_path : '/128x192?text=No+Image',
                         infoLink: 'https://www.themoviedb.org/movie/' + item.id
