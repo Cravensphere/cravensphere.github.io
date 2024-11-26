@@ -86,7 +86,7 @@
                             container.append(rendered);
 
                             // Add click event for movie titles to toggle details
-                            container.find('.movie-title').click(function(event) {
+                            container.find('.movie-title').off('click').on('click', function(event) {
                                 event.preventDefault();
                                 $(this).closest('.movie-info').find('.movie-details').toggle();
                             });
@@ -99,7 +99,7 @@
                             container.append(rendered);
 
                             // Add click event for movie titles to toggle details
-                            container.find('.movie-title').click(function(event) {
+                            container.find('.movie-title').off('click').on('click', function(event) {
                                 event.preventDefault();
                                 $(this).closest('.movie-info').find('.movie-details').toggle();
                             });
