@@ -37,6 +37,7 @@
             var currentPage = 1;
             var isGridLayout = true;
             var currentResults = [];
+            var allResults = [];
             var currentCollection = [];
             var sortOption = 'releaseDate';
 
@@ -220,27 +221,27 @@
                 });
             }
 
-            function searchMovies(query, startIndex) {
-                $.ajax({
-                    url: 'https://api.themoviedb.org/3/search/movie?api_key=56e665fbc9c321fad4cfb7957c12244b&query=' + query + '&page=' + startIndex,
-                    method: 'GET',
-                    success: function(response) {
-                        if (response.results) {
-                            currentResults = response.results;
-                            totalResults = response.total_results;
-                            appendMovieResults(currentResults, $('#results'));
-                            updatePagination();
-                        } else {
-                            $('#results').empty();
-                            $('#results').append('<p>No results found</p>');
-                            $('#pagination').empty();
+            function fetchAllResults(query, page = 1) {
+                return $.ajax({
+                    url: 'https://api.themoviedb.org/3/search/movie?api_key=56e665fbc9c321fad4cfb7957c12244b&query=' + query + '&page=' + page,
+                    method: 'GET'
+                }).then(function(response) {
+                    if (response.results) {
+                        allResults = allResults.concat(response.results);
+                        if (page < response.total_pages) {
+                            return fetchAllResults(query, page + 1);
                         }
-                    },
-                    error: function() {
-                        $('#results').empty();
-                        $('#results').append('<p>An error occurred while fetching the results</p>');
-                        $('#pagination').empty();
                     }
+                });
+            }
+
+            function searchMovies(query) {
+                allResults = [];
+                fetchAllResults(query).then(function() {
+                    currentResults = allResults;
+                    totalResults = allResults.length;
+                    appendMovieResults(currentResults, $('#results'));
+                    updatePagination();
                 });
             }
 
@@ -249,7 +250,7 @@
                 if (query) {
                     startIndex = 1;
                     currentPage = 1;
-                    searchMovies(query, startIndex);
+                    searchMovies(query);
                 } else {
                     $('#results').empty();
                     $('#results').append('<p>Please enter a search query</p>');
@@ -289,7 +290,7 @@
                     $('#pagination button').click(function() {
                         currentPage = parseInt($(this).attr('data-page'));
                         startIndex = currentPage;
-                        searchMovies($('#search-query').val(), startIndex);
+                        appendMovieResults(currentResults.slice((currentPage - 1) * maxResults, currentPage * maxResults), $('#results'));
                     });
                 }
             }
@@ -313,13 +314,13 @@
                     $('#results').removeClass('grid-container').addClass('list-container');
                     $('#collection').removeClass('grid-container').addClass('list-container');
                 }
-                appendMovieResults(currentResults, $('#results'));
+                appendMovieResults(currentResults.slice((currentPage - 1) * maxResults, currentPage * maxResults), $('#results'));
                 appendMovieResults(currentCollection, $('#collection'));
             });
 
             $('#sort-options').change(function() {
                 sortOption = $(this).val();
-                appendMovieResults(currentResults, $('#results'));
+                appendMovieResults(currentResults.slice((currentPage - 1) * maxResults, currentPage * maxResults), $('#results'));
                 appendMovieResults(currentCollection, $('#collection'));
             });
 
