@@ -22,7 +22,6 @@
         <div id="pagination"></div>
         <div id="movie-details"></div>
         <h2>Popular Movies and TV Shows</h2>
-        <button id="toggle-popular">Toggle Popular Section</button>
         <div id="collection" class="grid-container"></div>
     </main>
     <script>
@@ -233,11 +232,6 @@
                 }
                 appendMovieResults(currentResults, $('#results'));
                 appendMovieResults(currentCollection, $('#collection'));
-            });
-
-            // Toggle popular section visibility
-            $('#toggle-popular').click(function() {
-                $('#collection').toggle();
             });
 
             function fetchCollection() {
