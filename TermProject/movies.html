@@ -39,6 +39,12 @@
                     <img src="https://image.tmdb.org/t/p/w500{{thumbnail}}" alt="Movie cover" class="movie-cover">
                     <div class="movie-info">
                         <h2><a href="#" class="movie-title" data-id="{{id}}">{{title}}</a></h2>
+                        <div class="movie-details" style="display: none;">
+                            <p><strong>Director:</strong> {{director}}</p>
+                            <p><strong>Actors:</strong> {{actors}}</p>
+                            <p><strong>Description:</strong> {{description}}</p>
+                            <a href="{{infoLink}}" target="_blank">More Info</a>
+                        </div>
                     </div>
                 </div>
             `;
@@ -47,6 +53,12 @@
                 <div class="movie-item list-item">
                     <div class="movie-info">
                         <h2><a href="#" class="movie-title" data-id="{{id}}">{{title}}</a></h2>
+                        <div class="movie-details" style="display: none;">
+                            <p><strong>Director:</strong> {{director}}</p>
+                            <p><strong>Actors:</strong> {{actors}}</p>
+                            <p><strong>Description:</strong> {{description}}</p>
+                            <a href="{{infoLink}}" target="_blank">More Info</a>
+                        </div>
                     </div>
                 </div>
             `;
@@ -57,18 +69,21 @@
                     var data = {
                         id: item.id,
                         title: item.title || item.name,
-                        thumbnail: item.poster_path ? item.poster_path : '/128x192?text=No+Image'
+                        director: item.director || 'Unknown Director',
+                        actors: item.actors ? item.actors.slice(0, 3).join(', ') : 'Unknown Actors',
+                        description: item.overview || 'No description available',
+                        thumbnail: item.poster_path ? item.poster_path : '/128x192?text=No+Image',
+                        infoLink: 'https://www.themoviedb.org/movie/' + item.id
                     };
                     var template = isGridLayout ? movieTemplate : listMovieTemplate;
                     var rendered = Mustache.render(template, data);
                     container.append(rendered);
                 });
 
-                // Add click event for movie titles
+                // Add click event for movie titles to toggle details
                 container.find('.movie-title').click(function(event) {
                     event.preventDefault();
-                    var movieId = $(this).data('id');
-                    fetchMovieDetails(movieId);
+                    $(this).siblings('.movie-details').toggle();
                 });
             }
 
