@@ -22,14 +22,14 @@
                 <option value="score">Sort by Score</option>
                 <option value="alphabetical">Sort Alphabetically</option>
             </select>
-            <select id="genre-options">
-                <option value="">Select Genre</option>
-            </select>
         </div>
         <div id="results" class="grid-container"></div>
         <div id="pagination"></div>
         <div id="movie-details"></div>
         <h2>Popular Movies and TV Shows</h2>
+        <select id="genre-options">
+            <option value="">Select Genre</option>
+        </select>
         <div id="collection" class="grid-container"></div>
     </main>
     <script>
@@ -222,11 +222,10 @@
 
             function triggerSearch() {
                 var query = $('#search-query').val();
-                var genreId = $('#genre-options').val();
                 if (query) {
                     startIndex = 1;
                     currentPage = 1;
-                    searchMovies(query, genreId);
+                    searchMovies(query);
                 } else {
                     $('#results').empty();
                     $('#results').append('<p>Please enter a search query</p>');
@@ -300,6 +299,11 @@
                 appendMovieResults(currentResults.slice((currentPage - 1) * maxResults, currentPage * maxResults), $('#results'));
             });
 
+            $('#genre-options').change(function() {
+                selectedGenre = $(this).val();
+                fetchCollection();
+            });
+
             function fetchGenres() {
                 $.ajax({
                     url: 'https://api.themoviedb.org/3/genre/movie/list?api_key=56e665fbc9c321fad4cfb7957c12244b',
@@ -318,8 +322,12 @@
             }
 
             function fetchCollection() {
+                var url = 'https://api.themoviedb.org/3/trending/all/week?api_key=56e665fbc9c321fad4cfb7957c12244b';
+                if (selectedGenre) {
+                    url += '&with_genres=' + selectedGenre;
+                }
                 $.ajax({
-                    url: 'https://api.themoviedb.org/3/trending/all/week?api_key=56e665fbc9c321fad4cfb7957c12244b',
+                    url: url,
                     method: 'GET',
                     success: function(response) {
                         if (response.results) {
