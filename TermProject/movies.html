@@ -100,21 +100,55 @@
                         infoLink: 'https://www.themoviedb.org/movie/' + item.id
                     };
 
-                    var template = isGridLayout ? movieTemplate : listMovieTemplate;
-                    var rendered = Mustache.render(template, data);
-                    container.append(rendered);
+                    $.ajax({
+                        url: 'https://api.themoviedb.org/3/movie/' + item.id + '?api_key=56e665fbc9c321fad4cfb7957c12244b&append_to_response=credits',
+                        method: 'GET',
+                        success: function(response) {
+                            data.director = response.credits.crew.find(member => member.job === 'Director')?.name || 'Unknown Director';
+                            data.directorId = response.credits.crew.find(member => member.job === 'Director')?.id || '';
+                            data.actors = response.credits.cast.slice(0, 3).map((actor, index, array) => ({
+                                id: actor.id,
+                                name: actor.name,
+                                last: index === array.length - 1
+                            })) || [{ name: 'Unknown Actors', id: '' }];
+                            var template = isGridLayout ? movieTemplate : listMovieTemplate;
+                            var rendered = Mustache.render(template, data);
+                            container.append(rendered);
 
-                    // Add click event for movie titles to toggle details
-                    container.find('.movie-title').off('click').on('click', function(event) {
-                        event.preventDefault();
-                        $(this).closest('.movie-info').find('.movie-details').toggle();
-                    });
+                            // Add click event for movie titles to toggle details
+                            container.find('.movie-title').off('click').on('click', function(event) {
+                                event.preventDefault();
+                                $(this).closest('.movie-info').find('.movie-details').toggle();
+                            });
 
-                    // Add click event for person links to fetch more info
-                    container.find('.person-link').off('click').on('click', function(event) {
-                        event.preventDefault();
-                        var personId = $(this).data('id');
-                        fetchPersonDetails(personId);
+                            // Add click event for person links to fetch more info
+                            container.find('.person-link').off('click').on('click', function(event) {
+                                event.preventDefault();
+                                var personId = $(this).data('id');
+                                fetchPersonDetails(personId);
+                            });
+                        },
+                        error: function() {
+                            data.director = 'Unknown Director';
+                            data.directorId = '';
+                            data.actors = [{ name: 'Unknown Actors', id: '' }];
+                            var template = isGridLayout ? movieTemplate : listMovieTemplate;
+                            var rendered = Mustache.render(template, data);
+                            container.append(rendered);
+
+                            // Add click event for movie titles to toggle details
+                            container.find('.movie-title').off('click').on('click', function(event) {
+                                event.preventDefault();
+                                $(this).closest('.movie-info').find('.movie-details').toggle();
+                            });
+
+                            // Add click event for person links to fetch more info
+                            container.find('.person-link').off('click').on('click', function(event) {
+                                event.preventDefault();
+                                var personId = $(this).data('id');
+                                fetchPersonDetails(personId);
+                            });
+                        }
                     });
                 });
             }
