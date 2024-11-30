@@ -22,9 +22,6 @@
                 <option value="score">Sort by Score</option>
                 <option value="alphabetical">Sort Alphabetically</option>
             </select>
-            <select id="genre-options">
-                <option value="">Select Genre</option>
-            </select>
         </div>
         <div id="results" class="grid-container"></div>
         <div id="pagination"></div>
@@ -42,7 +39,6 @@
             var allResults = [];
             var currentCollection = [];
             var sortOption = 'releaseDate';
-            var selectedGenre = '';
 
             var movieTemplate = `
                 <div class="movie-item">
@@ -189,28 +185,23 @@
                 });
             }
 
-            function fetchAllResults(query, genreId, page = 1) {
-                var url = 'https://api.themoviedb.org/3/search/movie?api_key=56e665fbc9c321fad4cfb7957c12244b&query=' + query;
-                if (genreId) {
-                    url += '&with_genres=' + genreId;
-                }
-                url += '&page=' + page;
+            function fetchAllResults(query, page = 1) {
                 return $.ajax({
-                    url: url,
+                    url: 'https://api.themoviedb.org/3/search/movie?api_key=56e665fbc9c321fad4cfb7957c12244b&query=' + query + '&page=' + page,
                     method: 'GET'
                 }).then(function(response) {
                     if (response.results) {
                         allResults = allResults.concat(response.results);
                         if (page < response.total_pages && page < 10) { // Limit to 10 pages
-                            return fetchAllResults(query, genreId, page + 1);
+                            return fetchAllResults(query, page + 1);
                         }
                     }
                 });
             }
 
-            function searchMovies(query, genreId) {
+            function searchMovies(query) {
                 allResults = [];
-                fetchAllResults(query, genreId).then(function() {
+                fetchAllResults(query).then(function() {
                     currentResults = allResults;
                     sortItems(currentResults);
                     appendMovieResults(currentResults.slice(0, maxResults), $('#results'));
@@ -220,11 +211,10 @@
 
             function triggerSearch() {
                 var query = $('#search-query').val();
-                var genreId = $('#genre-options').val();
                 if (query) {
                     startIndex = 1;
                     currentPage = 1;
-                    searchMovies(query, genreId);
+                    searchMovies(query);
                 } else {
                     $('#results').empty();
                     $('#results').append('<p>Please enter a search query</p>');
@@ -298,23 +288,6 @@
                 appendMovieResults(currentResults.slice((currentPage - 1) * maxResults, currentPage * maxResults), $('#results'));
             });
 
-            function fetchGenres() {
-                $.ajax({
-                    url: 'https://api.themoviedb.org/3/genre/movie/list?api_key=56e665fbc9c321fad4cfb7957c12244b',
-                    method: 'GET',
-                    success: function(response) {
-                        if (response.genres) {
-                            response.genres.forEach(function(genre) {
-                                $('#genre-options').append('<option value="' + genre.id + '">' + genre.name + '</option>');
-                            });
-                        }
-                    },
-                    error: function() {
-                        $('#genre-options').append('<option value="">Failed to load genres</option>');
-                    }
-                });
-            }
-
             function fetchCollection() {
                 $.ajax({
                     url: 'https://api.themoviedb.org/3/trending/all/week?api_key=56e665fbc9c321fad4cfb7957c12244b',
@@ -335,7 +308,6 @@
                 });
             }
 
-            fetchGenres();
             fetchCollection();
         });
     </script>
