@@ -130,3 +130,26 @@ footer {
     width: 100%;
     bottom: 0;
 }
+
+/* Custom styles for dropdown menus */
+.custom-select {
+    appearance: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.custom-select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.custom-select option {
+    background-color: #fff;
+    color: #333;
+}
