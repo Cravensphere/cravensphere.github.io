@@ -18,7 +18,7 @@
             <button id="search-button">Search</button>
             <button id="toggle-layout">Toggle Layout</button>
             <select id="sort-options" class="custom-select">
-                <option value="releaseDate">Sort by Release Date</option>
+                <option value="releaseDate" selected>Sort by Release Date</option>
                 <option value="score">Sort by Score</option>
                 <option value="alphabetical">Sort Alphabetically</option>
             </select>
@@ -41,7 +41,7 @@
             var currentResults = [];
             var allResults = [];
             var currentCollection = [];
-            var sortOption = 'releaseDate';
+            var sortOption = 'releaseDate'; // Default sort option
             var selectedGenre = '';
 
             var movieTemplate = `
