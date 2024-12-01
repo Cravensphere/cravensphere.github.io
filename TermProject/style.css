@@ -153,3 +153,20 @@ footer {
     background-color: #fff;
     color: #333;
 }
+
+/* Styles for pagination */
+.pagination-button {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #007bff;
+    padding: 5px 10px;
+    margin: 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.pagination-button.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}

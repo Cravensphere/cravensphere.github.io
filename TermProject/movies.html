@@ -259,6 +259,7 @@
                         currentPage = parseInt($(this).attr('data-page'));
                         startIndex = currentPage;
                         appendMovieResults(currentResults.slice((currentPage - 1) * maxResults, currentPage * maxResults), $('#results'));
+                        updatePagination(); // Update pagination to highlight the current page
                     });
                 }
             }
