@@ -187,49 +187,8 @@
                 });
             }
 
-            function fetchMovieDetails(movieId) {
-                $.ajax({
-                    url: 'https://api.themoviedb.org/3/movie/' + movieId + '?api_key=56e665fbc9c321fad4cfb7957c12244b&append_to_response=credits',
-                    method: 'GET',
-                    success: function(response) {
-                        $('#movie-details').empty();
-                        if (response) {
-                            var title = response.title || response.name;
-                            var director = response.credits.crew.find(member => member.job === 'Director')?.name || 'Unknown Director';
-                            var directorId = response.credits.crew.find(member => member.job === 'Director')?.id || '';
-                            var actors = response.credits.cast.slice(0, 3).map(actor => actor.name).join(', ') || 'Unknown Actors';
-                            var actorIds = response.credits.cast.slice(0, 3).map(actor => actor.id).join(', ') || '';
-                            var description = response.overview || 'No description available';
-                            var thumbnail = response.poster_path ? 'https://image.tmdb.org/t/p/w500' + response.poster_path : 'https://via.placeholder.com/128x192?text=No+Image';
-                            var infoLink = 'https://www.themoviedb.org/movie/' + movieId;
-
-                            // Append the data to the movie details section
-                            $('#movie-details').append('<div class="movie-detail">' +
-                                '<img src="' + thumbnail + '" alt="Movie cover" class="movie-cover">' +
-                                '<div class="movie-info">' +
-                                '<h2>' + title + '</h2>' +
-                                '<p><strong>Director:</strong> <a href="#" class="person-link" data-id="' + directorId + '">' + director + '</a></p>' +
-                                '<p><strong>Actors:</strong> ' + actors.split(', ').map((actor, index) => '<a href="#" class="person-link" data-id="' + actorIds.split(', ')[index] + '">' + actor + '</a>').join(', ') + '</p>' +
-                                '<p><strong>Description:</strong> ' + description + '</p>' +
-                                '<a href="' + infoLink + '" target="_blank">More Info</a>' +
-                                '</div>' +
-                                '</div>');
-                        } else {
-                            $('#movie-details').append('<p>No details found for this movie</p>');
-                        }
-                    },
-                    error: function() {
-                        $('#movie-details').empty();
-                        $('#movie-details').append('<p>An error occurred while fetching the movie details</p>');
-                    }
-                });
-            }
-
-            function fetchAllResults(query, genreId, page = 1) {
+            function fetchAllResults(query, page = 1) {
                 var url = 'https://api.themoviedb.org/3/search/movie?api_key=56e665fbc9c321fad4cfb7957c12244b&query=' + query;
-                if (genreId) {
-                    url += '&with_genres=' + genreId;
-                }
                 url += '&page=' + page;
                 return $.ajax({
                     url: url,
@@ -238,15 +197,15 @@
                     if (response.results) {
                         allResults = allResults.concat(response.results);
                         if (page < response.total_pages && page < 10) { // Limit to 10 pages
-                            return fetchAllResults(query, genreId, page + 1);
+                            return fetchAllResults(query, page + 1);
                         }
                     }
                 });
             }
 
-            function searchMovies(query, genreId) {
+            function searchMovies(query) {
                 allResults = [];
-                fetchAllResults(query, genreId).then(function() {
+                fetchAllResults(query).then(function() {
                     currentResults = allResults;
                     sortItems(currentResults);
                     appendMovieResults(currentResults.slice(0, maxResults), $('#results'));
